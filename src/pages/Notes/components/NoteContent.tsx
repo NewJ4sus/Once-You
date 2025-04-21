@@ -1,9 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc, Timestamp, Unsubscribe } from 'firebase/firestore';
 import { db, auth } from '@/config/firebase';
 import { EditorComponent } from '@/pages/Notes/components/EditorComponent';
-import type { Note } from '@/types/note';
+import { EditorContent } from '@/types/editor';
 import { Dropdown, DropdownProvider } from '@/components/Dropdown/Dropdown';
+
+interface Note {
+  id: string;
+  title: string;
+  type: string;
+  content: EditorContent | null;
+  contentRef: string;
+  createdAt: Timestamp | Date;
+  lastEditedAt: Timestamp | Date;
+}
 
 interface NoteContentProps {
   selectedNoteId: string | null;
@@ -13,7 +23,7 @@ const NoteContent: React.FC<NoteContentProps> = ({ selectedNoteId }) => {
   const [note, setNote] = useState<Note | null>(null);
   const [localTitle, setLocalTitle] = useState('');
   const [localType, setLocalType] = useState<Note['type']>('не выбрано');
-  const editorRef = useRef<{ getContent: () => Promise<any> } | null>(null);
+  const editorRef = useRef<{ getContent: () => Promise<EditorContent | null> } | null>(null);
 
   useEffect(() => {
     if (!selectedNoteId || !auth.currentUser) {
@@ -24,8 +34,8 @@ const NoteContent: React.FC<NoteContentProps> = ({ selectedNoteId }) => {
     }
 
     const userId = auth.currentUser.uid;
-    let unsubscribeNote = null;
-    let unsubscribeContent = null;
+    let unsubscribeNote: Unsubscribe | null = null;
+    let unsubscribeContent: Unsubscribe | null = null;
 
     unsubscribeNote = onSnapshot(
       doc(db, 'notes', userId, 'userNotes', selectedNoteId),
@@ -36,7 +46,13 @@ const NoteContent: React.FC<NoteContentProps> = ({ selectedNoteId }) => {
           setLocalType('не выбрано');
           return;
         }
-        const noteData = noteDoc.data();
+        const noteData = noteDoc.data() as {
+          title: string;
+          type: string;
+          contentRef: string;
+          createdAt: Timestamp;
+          lastEditedAt: Timestamp;
+        };
 
         if (unsubscribeContent) {
           unsubscribeContent();
@@ -94,19 +110,16 @@ const NoteContent: React.FC<NoteContentProps> = ({ selectedNoteId }) => {
     }
   };
 
-  const formatDate = (timestamp) => {
+  const formatDate = (timestamp: Timestamp | Date | null) => {
     if (!timestamp) return '';
     
     try {
-      // Проверяем, является ли timestamp объектом Timestamp из Firebase
-      if (timestamp && typeof timestamp.toDate === 'function') {
+      if (timestamp && 'toDate' in timestamp && typeof timestamp.toDate === 'function') {
         return timestamp.toDate().toLocaleDateString('ru-RU');
       }
-      // Если это уже объект Date
       if (timestamp instanceof Date) {
         return timestamp.toLocaleDateString('ru-RU');
       }
-      // В случае ошибки возвращаем текущую дату
       return new Date().toLocaleDateString('ru-RU');
     } catch (error) {
       console.error('Error formatting date:', error);
