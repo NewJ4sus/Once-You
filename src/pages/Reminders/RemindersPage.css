@@ -1,0 +1,199 @@
+.reminder-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.reminder-input-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.reminder-input {
+  width: 100%;
+  padding: 0px 20px;
+  background-color: transparent;
+  color: var(--text-primary);
+  height: 60px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.reminder-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.add-reminder-btn {
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  background: transparent;
+  height: 60px;
+  min-width: 100px;
+  padding: 0px 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.add-reminder-btn:hover {
+  background: var(--accent-color);
+  color: var(--text-primary);
+}
+
+.reminder-tabs {
+  background: transparent;
+  border-radius: 10px;
+  border: none;
+}
+
+.reminder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 15px;
+  background: var(--background-secondary);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+/* reminder type styles */
+.reminder-item.standard {
+  border-left-color: var(--default-color);
+}
+
+.reminder-item.medium {
+  border-left-color: var(--warning-color);
+}
+
+.reminder-item.high {
+  border-left-color: var(--danger-color);
+}
+
+.reminder-item.completed {
+  background: var(--background-active-day);
+  opacity: 0.7;
+}
+
+.reminder-item.completed .reminder-text {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.reminder-checkbox {
+  margin-right: 15px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.reminder-text {
+  flex: 1;
+  font-size: 16px;
+}
+
+.reminder-time {
+  margin: 0 15px;
+  font-size: 14px;
+  color: var(--accent-color);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.reminder-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.reminder-edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.reminder-edit:hover {
+  opacity: 1;
+}
+
+.reminder-edit img {
+  width: 20px;
+  height: 20px;
+}
+
+.reminder-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.reminder-delete:hover {
+  opacity: 1;
+}
+
+.reminder-delete img {
+  width: 20px;
+  height: 20px;
+}
+
+.reminder-content {
+  width: 100%;
+  padding: 0px 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .reminder-input-container {
+    flex-direction: column;
+  }
+  .add-reminder-btn {
+    width: 100%;
+  }
+}
+
+.reminder-progress {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Если процент близок к дедлайну (например, больше 90%), можно выделить его красным */
+.reminder-item:not(.completed) .progress-percentage {
+  color: var(--danger-color);
+  font-weight: 600;
+}
+
+/* Для завершенных задач */
+.reminder-item.completed .progress-percentage {
+  color: var(--background-secondary);
+}
+
+.reminder-content-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

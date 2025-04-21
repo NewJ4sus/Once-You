@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=K2D:wght@400;700&display=swap" />
+    <title>Once You</title>
+    <script>
+      (function() {
+        try {
+          const savedTheme = localStorage.getItem('theme');
+          document.documentElement.setAttribute('data-theme', savedTheme || 'light');
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

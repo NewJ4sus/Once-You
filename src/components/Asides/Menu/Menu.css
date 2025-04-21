@@ -1,0 +1,120 @@
+.sidebar-menu {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 300px;
+  height: calc(100vh - 70px);
+  background-color: var(--background-primary);
+  border-right: 2px solid var(--border-color);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+
+  z-index: 8888;
+}
+
+.sidebar-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-menu-item.active a {
+  background-color: var(--background-secondary);
+  color: var(--accent-color);
+}
+
+.sidebar-menu-item a {
+  position: relative;
+  text-decoration: none;
+  color: var(--text-secondary);
+  width: 100%;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+}
+
+.sidebar-menu-item a:hover {
+  background-color: var(--background-secondary);
+  color: var(--accent-color);
+}
+
+.sidebar-menu-item a:hover .badge {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+.badge {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  border: 1px solid var(--text-secondary);
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 4px;
+  min-width: 30px;
+  text-align: center;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.folder-button {
+  display: none;
+  text-align: center;
+  background-color: var(--background-secondary);
+  transition: all 0.2s ease-in-out;
+  border: none;
+  outline: 1px solid transparent;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.folder-button span {
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+  color: var(--text-secondary);
+}
+
+.folder-button:hover { outline: 1px solid var(--accent-color); }
+.folder-button:hover span { color: var(--accent-color); }
+
+
+
+@media screen and (max-width: 1200px) {
+  .folder-button {
+    display: flex;
+  }
+  
+}
+@media screen and (max-width: 1024px) {
+  .sidebar-menu {
+    top: 60px;
+    height: calc(100vh - 60px);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-menu.active {
+    transform: translateX(0);
+  }
+}
+@media screen and (max-width: 768px) {
+  .sidebar-menu {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 480px) {
+}

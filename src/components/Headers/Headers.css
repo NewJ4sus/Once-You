@@ -1,0 +1,116 @@
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  color: var(--text-primary);
+  background-color: var(--header-rgba);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+
+.bold {
+  font-family: "K2D";
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  font-style: normal;
+}
+
+.header-left,
+.header-right {
+  position: relative;
+  height: 100%;
+  width: 300px;
+  padding: 0 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-left::after,
+.header-right::before {
+  content: "";
+  position: absolute;
+  top: 25%;
+  height: 50%;
+  width: 2px;
+  background-color: var(--border-color);
+}
+.header-left::after {
+  right: 0;
+}
+.header-right::before {
+  left: 0;
+}
+
+.header-left__namePage{
+  display: none;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.header-left__menu{
+  display: flex;
+  gap: 10px;
+}
+
+.mobile-menu-button {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background-color: var(--border-color);
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.kdb-version{
+  font-size: 12px;
+  font-weight: 400;
+  color:  var(--accent-color);
+}
+
+@media screen and (max-width: 1200px) {
+  header{
+    padding: 0 10px;
+  }
+  .header-right {
+    display: none;
+  }
+  .header-left {
+    flex: 1;
+    padding: 0px 10px;
+  }
+  .header-left::after{
+    display: none;
+  }
+}
+@media screen and (max-width: 1024px) {
+  header{
+    height: 60px;
+    padding: 0 10px;
+  }
+  .mobile-menu-button {
+    display: flex;
+  }
+  .header-left__namePage{
+    display: block;
+  }
+  .bold{
+    display: none;
+  }
+}
+@media screen and (max-width: 768px) {
+  
+}
+@media screen and (max-width: 480px) {
+}
