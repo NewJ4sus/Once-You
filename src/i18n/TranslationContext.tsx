@@ -3,12 +3,17 @@ import { useUserSettings } from '@/context/UserSettingsContext';
 import en from './translations/en';
 import ru from './translations/ru';
 
-const translations = {
+// Определяем тип для переводов
+type TranslationResource = Record<string, string | Record<string, any>>;
+type Translations = {
+  en: TranslationResource;
+  ru: TranslationResource;
+};
+
+const translations: Translations = {
   en,
   ru,
 };
-
-type TranslationType = typeof en;
 
 interface TranslationContextType {
   t: (key: string) => string;
@@ -29,17 +34,17 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const t = (path: string): string => {
     const keys = path.split('.');
-    let current: any = translations[currentLanguage as keyof typeof translations];
+    let current: any = translations[currentLanguage as keyof Translations];
     
     for (const key of keys) {
-      if (current[key] === undefined) {
+      if (!current || current[key] === undefined) {
         console.warn(`Translation missing for key: ${path}`);
         return path;
       }
       current = current[key];
     }
     
-    return current;
+    return typeof current === 'string' ? current : path;
   };
 
   return (
