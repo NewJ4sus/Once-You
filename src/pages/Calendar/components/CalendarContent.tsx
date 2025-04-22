@@ -8,18 +8,7 @@ import {
 } from 'firebase/firestore';
 import { db, auth } from '../../../config/firebase';
 import SVG from '../../../components/SVG/SVG';
-
-// Обновленные интерфейсы
-interface Weekdays {
-  en: string[];
-  ru: string[];
-}
-
-interface Months {
-  en: string[];
-  ru: string[];
-}
-
+import { useTranslation } from '@/i18n/TranslationContext';
 interface Task {
   id: string;
   createdAt: Date;
@@ -44,16 +33,6 @@ interface DayEvents {
   reminders: Reminder[];
 }
 
-const weekdays: Weekdays = {
-  en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-  ru: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
-};
-
-const months: Months = {
-  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-  ru: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
-};
-
 const CalendarContent: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [tasksCount, setTasksCount] = useState<number>(0);
@@ -61,6 +40,21 @@ const CalendarContent: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { t } = useTranslation();
+
+
+  const weekdays = [t('calendar.monday'), t('calendar.tuesday'), 
+                  t('calendar.wednesday'), t('calendar.thursday'), 
+                  t('calendar.friday'), t('calendar.saturday'), 
+                  t('calendar.sunday')];
+  const months = [t('calendar.january'), t('calendar.february'), 
+                  t('calendar.march'), t('calendar.april'), 
+                  t('calendar.may'), t('calendar.june'), 
+                  t('calendar.july'), t('calendar.august'), 
+                  t('calendar.september'), t('calendar.october'), 
+                  t('calendar.november'), t('calendar.december')];
+
+
 
   // Fetch tasks and reminders from Firebase
   useEffect(() => {
@@ -327,21 +321,23 @@ const CalendarContent: React.FC = () => {
               <button className="nav-button" onClick={() => navigateMonth(-1)}>
                 <SVG name="arrow_left" />
               </button>
-              <span className="month">{months.ru[currentDate.getMonth()]}</span>
+              <span className="month">{months[currentDate.getMonth()]}</span>
               <button className="nav-button" onClick={() => navigateMonth(1)}>
                 <SVG name="arrow_right" />
               </button>
             </div>
           </div>
           <div className="calendar-actions">
-            <button className="today-button" onClick={goToToday}>Сегодня</button>
+            <button className="today-button" onClick={goToToday}>
+              {t('calendar.dayBtn')}
+            </button>
             <div className="calendar-stats">
               <div className="stat-item">
-                <span className="stat-label">Задачи:</span>
+                <span className="stat-label">{t('calendar.task')}</span>
                 <span className="stat-value">{tasksCount}</span>
               </div>
               <div className="stat-item">
-                <span className="stat-label">Напоминания:</span>
+                <span className="stat-label">{t('calendar.reminder')}</span>
                 <span className="stat-value">{remindersCount}</span>
               </div>
             </div>
@@ -349,7 +345,7 @@ const CalendarContent: React.FC = () => {
         </div>
         
         <div className="calendar-weekdays">
-          {weekdays.ru.map(day => (
+          {weekdays.map(day => (
             <div key={day} className="weekday">{day}</div>
           ))}
         </div>

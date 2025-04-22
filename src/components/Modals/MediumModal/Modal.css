@@ -33,7 +33,7 @@
   margin: auto;
   padding: 0;
   box-shadow: 0 8px 32px var(--shadow-color);
-  border: 1px solid #F5F4F7;
+  border: 1px solid var(--border-color);
   transform: translateY(-20px);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }

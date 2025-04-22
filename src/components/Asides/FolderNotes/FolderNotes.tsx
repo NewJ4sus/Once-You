@@ -15,6 +15,7 @@ import { db, auth } from '../../../config/firebase';
 import { useAppContext } from '@/context/AppContext';
 import SVG from '@/components/SVG/SVG';
 import './FolderNotes.css';
+import { useTranslation } from '@/i18n/TranslationContext';
 
 interface Note {
   id: string;
@@ -42,6 +43,7 @@ const FolderNotes: React.FC<FolderNotesProps> = ({ onNoteSelect, selectedNoteId 
   const { isFolderOpen, folderRef } = useAppContext();
   const [notes, setNotes] = useState<Note[]>([]);
   const [hideNoteText, setHideNoteText] = useState(false);
+  const { t } = useTranslation();
   
   const folderClassName = `folder-notes ${isFolderOpen ? 'active' : ''}`;
 
@@ -174,7 +176,7 @@ const FolderNotes: React.FC<FolderNotesProps> = ({ onNoteSelect, selectedNoteId 
   return (
     <aside className={folderClassName} ref={folderRef}>
       <button className="folder-notes__add-button" onClick={handleAddNote}>
-        Создать файл
+        {t('notes.createNote')}
       </button>
       <div className="card-block">
         {notes.map(note => {

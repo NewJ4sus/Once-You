@@ -18,6 +18,14 @@
 
 .settings-section-title {
     font-size: 1.25rem;
+    background: linear-gradient(
+        to right, 
+        var(--background-secondary),
+        color-mix(in srgb, var(--background-secondary) 50%, var(--background-primary) 50%),
+        var(--background-primary)
+    );
+    padding: 10px 20px;
+    border-radius: 5px;
     font-weight: 500;
     margin-bottom: 1.5rem;
     color: var(--text-primary);
@@ -33,6 +41,18 @@
 
 .settings-group:last-child {
     border-bottom: none;
+}
+
+.input_button_group{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+}
+
+.input_button_group .settings-button{
+    padding: 0px 20px;
+    height: 60px;
 }
 
 .settings-label {

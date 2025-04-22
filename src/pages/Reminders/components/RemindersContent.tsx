@@ -12,6 +12,8 @@ import {
 import { db, auth } from '../../../config/firebase';
 import SVG from '../../../components/SVG/SVG';
 import Modal from '@/components/Modals/MediumModal/Modal';
+import { useTranslation } from '@/i18n/TranslationContext';
+import { Dropdown, DropdownProvider } from '@/components/Dropdown/Dropdown';
 
 // Define types for our reminder
 interface Reminder {
@@ -29,7 +31,8 @@ const RemindersContent: React.FC = () => {
   const [reminderTitle, setReminderTitle] = useState('');
   const [activeTab, setActiveTab] = useState<'current' | 'completed'>('current');
   const [loading, setLoading] = useState(true);
-  
+  const { t } = useTranslation();
+
   // State for editing reminder
   const [editingReminder, setEditingReminder] = useState<Reminder | null>(null);
   const [editTitle, setEditTitle] = useState('');
@@ -209,7 +212,7 @@ const RemindersContent: React.FC = () => {
           {reminder.reminderDate && (
             <small>
               {reminder.reminderDate.toLocaleString()}
-              {reminder.repeat && ` (${reminder.repeatInterval})`}
+              {reminder.repeat && ` (${t(`reminders.${reminder.repeatInterval}`)})`}
             </small>
           )}
         </div>
@@ -235,151 +238,165 @@ const RemindersContent: React.FC = () => {
   const completedReminders = reminders.filter(reminder => reminder.completed);
 
   if (loading) {
-    return <div className="loading">Loading reminders...</div>;
+    return <div className="loading">{t('reminders.loading')}</div>;
   }
 
   return (
-    <main>
-      <div className="reminder-container">
-        <div className="reminder-input-container">
-          <input 
-            type="text" 
-            className="reminder-input" 
-            placeholder="Reminder title..."
-            value={reminderTitle}
-            onChange={(e) => setReminderTitle(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
-          <button className="add-reminder-btn" onClick={handleAddReminder}>
-            <span>Add</span>
-          </button>
-        </div>
-
-        <div className="reminder-tabs">
-          <div className="tab-buttons">
-            <button 
-              className={`tab-btn ${activeTab === 'current' ? 'active' : ''}`}
-              onClick={() => setActiveTab('current')}
-            >
-              Current Reminders ({currentReminders.length})
-            </button>
-            <button 
-              className={`tab-btn ${activeTab === 'completed' ? 'active' : ''}`}
-              onClick={() => setActiveTab('completed')}
-            >
-              Completed ({completedReminders.length})
+      <main>
+        <div className="reminder-container">
+          <div className="reminder-input-container">
+            <input 
+              type="text" 
+              className="reminder-input" 
+              placeholder={t('reminders.reminderTitle')}
+              value={reminderTitle}
+              onChange={(e) => setReminderTitle(e.target.value)}
+              onKeyPress={handleKeyPress}
+            />
+            <button className="add-reminder-btn" onClick={handleAddReminder}>
+              <span>{t('reminders.addReminder')}</span>
             </button>
           </div>
 
-          <div className="tab-content">
-            <div className={`tab-pane ${activeTab === 'current' ? 'active' : ''}`}>
-              <div className="reminder-list">
-                {currentReminders.length > 0 ? (
-                  currentReminders.map(reminder => renderReminderItem(reminder))
-                ) : (
-                  <div className="empty-state">No current reminders</div>
-                )}
-              </div>
-            </div>
-            <div className={`tab-pane ${activeTab === 'completed' ? 'active' : ''}`}>
-              <div className="reminder-list">
-                {completedReminders.length > 0 ? (
-                  completedReminders.map(reminder => renderReminderItem(reminder))
-                ) : (
-                  <div className="empty-state">No completed reminders</div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Edit Reminder Modal */}
-      <Modal id="EditModalReminder" title="Edit">
-        <div className='modal-edit-task'>
-          <input 
-            className='modal-edit-task-input' 
-            type="text" 
-            placeholder='Reminder Title' 
-            value={editTitle}
-            onChange={(e) => setEditTitle(e.target.value)}
-          />
-          <textarea 
-            className='modal-edit-task-textarea' 
-            placeholder='Reminder Description' 
-            value={editText}
-            onChange={(e) => setEditText(e.target.value)}
-          />
-          <div className='modal-edit-task-date'>
-            <div className="date-field">
-              <label htmlFor="reminder-date">Date:</label>
-              <input 
-                id="reminder-date"
-                className='modal-edit-task-input' 
-                type="date"
-                value={editDate}
-                onChange={(e) => setEditDate(e.target.value)}
-              />
-            </div>
-            <div className="date-field">
-              <label htmlFor="reminder-time">Time:</label>
-              <input 
-                id="reminder-time"
-                className='modal-edit-task-input' 
-                type="time"
-                value={editTime}
-                onChange={(e) => setEditTime(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className='modal-edit-task-repeat'>
-            <label className="repeat-checkbox">
-              <input 
-                type="checkbox"
-                checked={editRepeat}
-                onChange={(e) => setEditRepeat(e.target.checked)}
-              />
-              Repeat
-            </label>
-
-            {editRepeat && (
-              <select
-                value={editRepeatInterval}
-                onChange={(e) => setEditRepeatInterval(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
-                className="repeat-interval-select"
+          <div className="reminder-tabs">
+            <div className="tab-buttons">
+              <button 
+                className={`tab-btn ${activeTab === 'current' ? 'active' : ''}`}
+                onClick={() => setActiveTab('current')}
               >
-                <option value="daily">Every day</option>
-                <option value="weekly">Every week</option>
-                <option value="monthly">Every month</option>
-                <option value="yearly">Every year</option>
-              </select>
-            )}
-          </div>
+                {t('reminders.currentReminders')} ({currentReminders.length})
+              </button>
+              <button 
+                className={`tab-btn ${activeTab === 'completed' ? 'active' : ''}`}
+                onClick={() => setActiveTab('completed')}
+              >
+                {t('reminders.completedReminders')} ({completedReminders.length})
+              </button>
+            </div>
 
-          <div className='modal-edit-task-buttons'>
-            <button 
-              className='modal-edit-task-button'
-              onClick={handleSaveReminder}
-            >
-              Save
-            </button>
-            <button 
-              className='modal-edit-task-button cancel'
-              onClick={() => {
-                const modal = document.getElementById('EditModalReminder');
-                if (modal) {
-                  modal.classList.remove('active');
-                }
-                setEditingReminder(null);
-              }}
-            >
-              Cancel
-            </button>
+            <div className="tab-content">
+              <div className={`tab-pane ${activeTab === 'current' ? 'active' : ''}`}>
+                <div className="reminder-list">
+                  {currentReminders.length > 0 ? (
+                    currentReminders.map(reminder => renderReminderItem(reminder))
+                  ) : (
+                    <div className="empty-state">{t('reminders.noCurrentReminders')}</div>
+                  )}
+                </div>
+              </div>
+              <div className={`tab-pane ${activeTab === 'completed' ? 'active' : ''}`}>
+                <div className="reminder-list">
+                  {completedReminders.length > 0 ? (
+                    completedReminders.map(reminder => renderReminderItem(reminder))
+                  ) : (
+                    <div className="empty-state">{t('reminders.noCompletedReminders')}</div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </Modal>
-    </main>
+
+        {/* Edit Reminder Modal */}
+        <Modal id="EditModalReminder" title="Edit">
+          <div className='modal-edit-task'>
+            <input 
+              className='modal-edit-task-input' 
+              type="text" 
+              placeholder={t('reminders.reminderTitle')} 
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+            />
+            <textarea 
+              className='modal-edit-task-textarea' 
+              placeholder={t('reminders.reminderDescription')} 
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+            />
+            <div className='modal-edit-task-date'>
+              <div className="date-field">
+                <label htmlFor="reminder-date">{t('reminders.reminderDate')}</label>
+                <input 
+                  id="reminder-date"
+                  className='modal-edit-task-input' 
+                  type="date"
+                  value={editDate}
+                  onChange={(e) => setEditDate(e.target.value)}
+                />
+              </div>
+              <div className="date-field">
+                <label htmlFor="reminder-time">{t('reminders.reminderTime')}</label>
+                <input 
+                  id="reminder-time"
+                  className='modal-edit-task-input' 
+                  type="time"
+                  value={editTime}
+                  onChange={(e) => setEditTime(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className='modal-edit-task-repeat'>
+              <label className="repeat-checkbox">
+                <input 
+                  type="checkbox"
+                  checked={editRepeat}
+                  onChange={(e) => setEditRepeat(e.target.checked)}
+                />
+                {t('reminders.repeat')}
+              </label>
+
+              {editRepeat && (
+                <DropdownProvider>
+                <Dropdown
+                  id="repeat-interval"
+                  buttonContent={<span>{t(`reminders.${editRepeatInterval}`)}</span>}
+                  buttonClassName="min-w-150"
+                  key={editRepeatInterval}
+                >
+                  <ul className="dropdown-menu-list">
+                    <li className="dropdown-menu-item">
+                      <a href="#" onClick={() => setEditRepeatInterval('daily')}>{t('reminders.daily')}</a>
+                    </li>
+                    <li className="dropdown-menu-item">
+                      <a href="#" onClick={() => setEditRepeatInterval('weekly')}>{t('reminders.weekly')}</a>
+                    </li>
+                    <li className="dropdown-menu-item">
+                      <a href="#" onClick={() => setEditRepeatInterval('monthly')}>{t('reminders.monthly')}</a>
+                    </li>
+                    <li className="dropdown-menu-item">
+                      <a href="#" onClick={() => setEditRepeatInterval('yearly')}>{t('reminders.yearly')}</a>
+                    </li>
+                  </ul>
+                </Dropdown>
+                </DropdownProvider>
+              )}
+            </div>
+
+            <div className='modal-edit-task-buttons'>
+              <button 
+                className='modal-edit-task-button'
+                onClick={handleSaveReminder}
+              >
+                {t('reminders.save')}
+              </button>
+              <button 
+                className='modal-edit-task-button cancel'
+                onClick={() => {
+                  const modal = document.getElementById('EditModalReminder');
+                  if (modal) {
+                    modal.classList.remove('active');
+                  }
+                  setEditingReminder(null);
+                }}
+              >
+                {t('reminders.cancel')}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      </main>
+    
   );
 };
 

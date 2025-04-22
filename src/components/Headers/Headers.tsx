@@ -8,6 +8,7 @@ import { useAppContext } from '@/context/AppContext';
 import { Dropdown, DropdownProvider } from '../Dropdown/Dropdown';
 import './Headers.css';
 import UserDisplayName from './UserDisplayName';
+import { useTranslation } from '@/i18n/TranslationContext';
 
 interface HeadersProps {
   namePage: string;
@@ -18,7 +19,7 @@ const Headers: React.FC<HeadersProps> = ({ namePage }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isNotesPage = location.pathname === '/notes';
-
+  const { t } = useTranslation();
   const handleLogout = () => {
       signOut(auth)
       navigate('/login')
@@ -56,7 +57,7 @@ const Headers: React.FC<HeadersProps> = ({ namePage }) => {
         <div className='header-left__menu'>
           {namePage === "Notes" && (
               <li className="folder-button" onClick={toggleFolder}>
-                  <span>Open Folder</span>
+                  <span>{t('header.folderBtn')}</span>
               </li>
           )}
           <div className="mobile-menu-button" onClick={toggleMenu}>
@@ -75,7 +76,7 @@ const Headers: React.FC<HeadersProps> = ({ namePage }) => {
               <li className="dropdown-menu-item">
                 <a href="#" onClick={handleLogout}>
                   <SVG name="door"/>
-                  Logout
+                  {t('header.logout')}
                 </a>
               </li>
             </ul>

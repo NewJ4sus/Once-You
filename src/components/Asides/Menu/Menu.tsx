@@ -4,6 +4,7 @@ import { collection, query, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '@/config/firebase';
 import SVG from '@/components/SVG/SVG';
 import { useAppContext } from '@/context/AppContext';
+import { useTranslation } from '@/i18n/TranslationContext';
 import './Menu.css';
 
 interface MenuProps {
@@ -17,6 +18,7 @@ const Menu: React.FC<MenuProps> = ({ namePage }) => {
     notes: 0,
     reminders: 0
   });
+  const { t } = useTranslation();
   
   useEffect(() => {
     if (!auth.currentUser) return;
@@ -59,36 +61,37 @@ const Menu: React.FC<MenuProps> = ({ namePage }) => {
     <aside className={menuClassName} ref={menuRef}>
         <div className="sidebar-menu-header">
             <ul className="sidebar-menu-list">
-                <li className={`sidebar-menu-item ${namePage === "Home" ? "active" : ""}`}>
+                {/* <li className={`sidebar-menu-item ${namePage === "Home" ? "active" : ""}`}> */}
+                <li className={`sidebar-menu-item`} style={{opacity: 0.5, pointerEvents: 'none', backgroundColor: 'var(--background-tertiary)', cursor: 'not-allowed'}}>
                     <Link to="/">
                         <SVG name="home"/>
-                        <span>Home</span>
+                        <span>{t('menu.home')}</span>
                     </Link>
                 </li>
                 <li className={`sidebar-menu-item ${namePage === "Tasks" ? "active" : ""}`}>
                     <Link to="/tasks">
                         <SVG name="task"/>
-                        <span>Tasks</span>
+                        <span>{t('menu.tasks')}</span>
                         {counts.tasks > 0 && <span className="badge">{counts.tasks}</span>}
                     </Link>
                 </li>
                 <li className={`sidebar-menu-item ${namePage === "Notes" ? "active" : ""}`}>
                     <Link to="/notes">
                         <SVG name="note"/>
-                        <span>Notes</span>
+                        <span>{t('menu.notes')}</span>
                         {counts.notes > 0 && <span className="badge">{counts.notes}</span>}
                     </Link>
                 </li>
                 <li className={`sidebar-menu-item ${namePage === "Calendar" ? "active" : ""}`}>
                     <Link to="/calendar">
                         <SVG name="calendar"/>
-                        <span>Calendar</span>
+                        <span>{t('menu.calendar')}</span>
                     </Link>
                 </li>
                 <li className={`sidebar-menu-item ${namePage === "Reminders" ? "active" : ""}`}>
                     <Link to="/reminders">
                         <SVG name="clock"/>
-                        <span>Reminders</span>
+                        <span>{t('menu.reminders')}</span>
                         {counts.reminders > 0 && <span className="badge">{counts.reminders}</span>}
                     </Link>
                 </li>
@@ -99,13 +102,13 @@ const Menu: React.FC<MenuProps> = ({ namePage }) => {
                 <li className={`sidebar-menu-item ${namePage === "Settings" ? "active" : ""}`}>
                     <Link to="/settings">
                         <SVG name="settings"/>
-                        <span>Settings</span>
+                        <span>{t('menu.settings')}</span>
                     </Link>
                 </li>
                 <li className={`sidebar-menu-item ${namePage === "Information" ? "active" : ""}`}>
                     <Link to="/information">
                         <SVG name="info"/>
-                        <span>Information</span>
+                        <span>{t('menu.information')}</span>
                     </Link>
                 </li>
             </ul>

@@ -1,10 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 import { UserSettingsProvider } from './context/UserSettingsContext';
+import { NoteTypesProvider } from './context/NoteTypesContext';
 import { auth } from '@/config/firebase'
 import { useEffect, useState } from 'react'
 import { useTheme } from '@/hooks/useTheme';
 import '@/assets/css/themes.css';
+import { TranslationProvider } from '@/i18n/TranslationContext';
 
 import Home from './pages/Home/HomePage';
 import Tasks from './pages/Tasks/TasksPage';
@@ -49,26 +51,30 @@ function App() {
   return (
     <AppProvider>
       <UserSettingsProvider>
-        <ThemeWrapper>
-          <Router>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
-              <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/login" />} />
+        <TranslationProvider>
+          <NoteTypesProvider>
+            <ThemeWrapper>
+              <Router>
+                <Routes>
+                  {/* Public routes */}
+                  <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
+                  <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/login" />} />
 
-              {/* Private routes */}
-              <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
-              <Route path="/tasks" element={isAuthenticated ? <Tasks /> : <Navigate to="/login" />} />
-              <Route path="/notes" element={isAuthenticated ? <Notes /> : <Navigate to="/login" />} />
-              <Route path="/reminders" element={isAuthenticated ? <Reminders /> : <Navigate to="/login" />} />
-              <Route path="/calendar" element={isAuthenticated ? <Calendar /> : <Navigate to="/login" />} />
-              <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
-              <Route path="/information" element={isAuthenticated ? <Information /> : <Navigate to="/login" />} />
+                  {/* Private routes */}
+                  <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
+                  <Route path="/tasks" element={isAuthenticated ? <Tasks /> : <Navigate to="/login" />} />
+                  <Route path="/notes" element={isAuthenticated ? <Notes /> : <Navigate to="/login" />} />
+                  <Route path="/reminders" element={isAuthenticated ? <Reminders /> : <Navigate to="/login" />} />
+                  <Route path="/calendar" element={isAuthenticated ? <Calendar /> : <Navigate to="/login" />} />
+                  <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
+                  <Route path="/information" element={isAuthenticated ? <Information /> : <Navigate to="/login" />} />
 
-              <Route path="/admin" element={isAuthenticated ? <AdminPanel /> : <Navigate to="/login" />} />
-            </Routes>
-          </Router>
-        </ThemeWrapper>
+                  <Route path="/admin" element={isAuthenticated ? <AdminPanel /> : <Navigate to="/login" />} />
+                </Routes>
+              </Router>
+            </ThemeWrapper>
+          </NoteTypesProvider>
+        </TranslationProvider>
       </UserSettingsProvider>
     </AppProvider>
   );

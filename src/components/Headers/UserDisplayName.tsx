@@ -7,7 +7,7 @@ const UserDisplayName: React.FC = () => {
   const user = auth.currentUser;
 
   const displayName = userSettings 
-    ? (userSettings.firstName && userSettings.lastName
+    ? (userSettings.firstName || userSettings.lastName
         ? `${userSettings.firstName} ${userSettings.lastName}`
         : user?.email)
     : "Loading...";

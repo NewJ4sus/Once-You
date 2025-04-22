@@ -11,6 +11,7 @@ import {
 import { db, auth } from '../../../config/firebase';
 import SVG from '../../../components/SVG/SVG';
 import Modal from '@/components/Modals/MediumModal/Modal';
+import { useTranslation } from '@/i18n/TranslationContext';
 
 // Define types for our task
 interface Task {
@@ -29,7 +30,8 @@ const TasksContent: React.FC = () => {
   const [taskTitle, setTaskTitle] = useState('');
   const [activeTab, setActiveTab] = useState<'current' | 'completed'>('current');
   const [loading, setLoading] = useState(true);
-  
+  const { t } = useTranslation();
+
   // State for editing task
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [editTitle, setEditTitle] = useState('');
@@ -311,7 +313,7 @@ const TasksContent: React.FC = () => {
   );
 
   if (loading) {
-    return <div className="loading">Loading tasks...</div>;
+    return <div className="loading">{t('task.loading')}</div>;
   }
 
   return (
@@ -321,13 +323,13 @@ const TasksContent: React.FC = () => {
           <input 
             type="text" 
             className="task-input" 
-            placeholder="Task title..."
+            placeholder={t('task.title')}
             value={taskTitle}
             onChange={(e) => setTaskTitle(e.target.value)}
             onKeyPress={handleKeyPress}
           />
           <button className="add-task-btn" onClick={handleAddTask}>
-            <span>Add</span>
+            <span>{t('task.addTask')}</span>
           </button>
         </div>
 
@@ -337,13 +339,13 @@ const TasksContent: React.FC = () => {
               className={`tab-btn ${activeTab === 'current' ? 'active' : ''}`}
               onClick={() => setActiveTab('current')}
             >
-              Current Tasks ({currentTasks.length})
+              {t('task.currentTask')} ({currentTasks.length})
             </button>
             <button 
               className={`tab-btn ${activeTab === 'completed' ? 'active' : ''}`}
               onClick={() => setActiveTab('completed')}
             >
-              Completed ({completedTasks.length})
+              {t('task.completedTask')} ({completedTasks.length})
             </button>
           </div>
 
@@ -353,7 +355,7 @@ const TasksContent: React.FC = () => {
                 {currentTasks.length > 0 ? (
                   currentTasks.map(task => renderTaskItem(task))
                 ) : (
-                  <div className="empty-state">No current tasks</div>
+                  <div className="empty-state">{t('task.noTask')}</div>
                 )}
               </div>
             </div>
@@ -362,7 +364,7 @@ const TasksContent: React.FC = () => {
                 {completedTasks.length > 0 ? (
                   completedTasks.map(task => renderTaskItem(task))
                 ) : (
-                  <div className="empty-state">No completed tasks</div>
+                  <div className="empty-state">{t('task.noTask')}</div>
                 )}
               </div>
             </div>
@@ -376,13 +378,13 @@ const TasksContent: React.FC = () => {
           <input 
             className='modal-edit-task-input' 
             type="text" 
-            placeholder='Task Title' 
+            placeholder={t('task.title')} 
             value={editTitle}
             onChange={(e) => setEditTitle(e.target.value)}
           />
           <textarea 
             className='modal-edit-task-textarea' 
-            placeholder='Task Description' 
+            placeholder={t('task.description')} 
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
           />
@@ -394,7 +396,7 @@ const TasksContent: React.FC = () => {
               checked={editType === 'standard'}
               onChange={() => handleTypeChange('standard')}
             />
-            <label className="button-priority" htmlFor="standard">Standard</label>
+            <label className="button-priority" htmlFor="standard">{t('task.standard')}</label>
             <input 
               type="checkbox" 
               className="btn-check" 
@@ -402,7 +404,7 @@ const TasksContent: React.FC = () => {
               checked={editType === 'medium'}
               onChange={() => handleTypeChange('medium')}
             />
-            <label className="button-priority" htmlFor="medium">Medium</label>
+            <label className="button-priority" htmlFor="medium">{t('task.medium')}</label>
             <input 
               type="checkbox" 
               className="btn-check" 
@@ -410,11 +412,11 @@ const TasksContent: React.FC = () => {
               checked={editType === 'high'}
               onChange={() => handleTypeChange('high')}
             />
-            <label className="button-priority" htmlFor="high">High</label>
+            <label className="button-priority" htmlFor="high">{t('task.high')}</label>
           </div>
           <div className='modal-edit-task-date'>
             <div className="date-field">
-              <label htmlFor="start-date">Дата начала:</label>
+              <label htmlFor="start-date">{t('task.dateAt')}:</label>
               <div className="date-time-inputs">
                 <input 
                   id="start-date"
@@ -433,7 +435,7 @@ const TasksContent: React.FC = () => {
               </div>
             </div>
             <div className="date-field">
-              <label htmlFor="deadline-date">Дата дедлайна:</label>
+              <label htmlFor="deadline-date">{t('task.dateDeadline')}:</label>
               <div className="date-time-inputs">
                 <input 
                   id="deadline-date"
@@ -458,7 +460,7 @@ const TasksContent: React.FC = () => {
               className='modal-edit-task-button'
               onClick={handleSaveTask}
             >
-              Save
+              {t('task.saveTask')}
             </button>
             <button 
               className='modal-edit-task-button cancel'
@@ -470,7 +472,7 @@ const TasksContent: React.FC = () => {
                 setEditingTask(null);
               }}
             >
-              Cancel
+              {t('task.cancelTask')}
             </button>
           </div>
         </div>

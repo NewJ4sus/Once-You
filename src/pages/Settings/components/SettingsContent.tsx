@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dropdown, DropdownProvider } from '@/components/Dropdown/Dropdown';
 import { Link } from 'react-router-dom';
 import { useUserSettings } from '@/context/UserSettingsContext';
+import { useNoteTypes } from '@/context/NoteTypesContext';
+import { useTranslation } from '@/i18n/TranslationContext';
 
 interface UserSettings {
   firstName: string;
@@ -15,6 +17,9 @@ interface UserSettings {
 }
 const SettingsContent: React.FC = () => {
   const { userSettings, updateSetting } = useUserSettings();
+  const { noteTypes, addNoteType, removeNoteType } = useNoteTypes();
+  const { t } = useTranslation();
+  const [newNoteType, setNewNoteType] = useState('');
 
   const handleSettingChange = async (key: keyof UserSettings, value: UserSettings[keyof UserSettings]) => {
     await updateSetting(key, value);
@@ -24,94 +29,101 @@ const SettingsContent: React.FC = () => {
     await updateSetting(field, value);
   };
 
+  const handleAddNoteType = async () => {
+    if (newNoteType.trim() && !noteTypes.includes(newNoteType.trim())) {
+      await addNoteType(newNoteType.trim());
+      setNewNoteType('');
+    }
+  };
+
   return (
     <DropdownProvider>
       <main>
         <div className="settings-container">
           <div className="settings-section">
-            <h2 className="settings-section-title">Account</h2>
+            <h2 className="settings-section-title">{t('settings.account')}</h2>
             <div className="settings-group" style={{ display: 'flex', gap: '10px' }}>
               <input
                 type="text"
                 className="settings-input"
-                placeholder="First Name"
+                placeholder={t('settings.firstName')}
                 value={userSettings?.firstName}
                 onChange={(e) => handleNameChange('firstName', e.target.value)}
               />
               <input
                 type="text"
                 className="settings-input"
-                placeholder="Last Name"
+                placeholder={t('settings.lastName')}
                 value={userSettings?.lastName}
                 onChange={(e) => handleNameChange('lastName', e.target.value)}
               />
             </div>
           </div>
           <div className="settings-section">
-            <h2 className="settings-section-title">Appearance</h2>
+            <h2 className="settings-section-title">{t('settings.appearance')}</h2>
 
             <div className="settings-group">
-              <label className="settings-label">Theme Color</label>
+              <label className="settings-label">{t('settings.themeColor')}</label>
                 <Dropdown
                   id="theme-color"
-                  buttonContent={<span>{userSettings?.themeColor}</span>}
+                  buttonContent={<span>{t(`settings.${userSettings?.themeColor}`)}</span>}
                   buttonClassName="min-w-150"
                   key={userSettings?.themeColor}
                 >
                   <ul className="dropdown-menu-list">
                     <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('themeColor', 'dark')}>Dark</a>
+                      <a href="#" onClick={() => handleSettingChange('themeColor', 'dark')}>{t('settings.dark')}</a>
                     </li>
                     <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('themeColor', 'light')}>Light</a>
+                      <a href="#" onClick={() => handleSettingChange('themeColor', 'light')}>{t('settings.light')}</a>
                     </li>
                     <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('themeColor', 'book')}>Book</a>
+                      <a href="#" onClick={() => handleSettingChange('themeColor', 'book')}>{t('settings.book')}</a>
                     </li>
                     <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('themeColor', 'green')}>Green</a>
+                      <a href="#" onClick={() => handleSettingChange('themeColor', 'green')}>{t('settings.green')}</a>
                     </li>
                   </ul>
                 </Dropdown>
             </div>
 
             <div className="settings-group">
-                <label className="settings-label">Theme Type</label>
+                <label className="settings-label">{t('settings.themeType')}</label>
                 
                   <Dropdown 
                       id="theme-type"
-                      buttonContent={<span>{userSettings?.themeType}</span>}
+                      buttonContent={<span>{t(`settings.${userSettings?.themeType}`)}</span>}
                       buttonClassName="min-w-150"
                       key={userSettings?.themeType}
                   >
                       <ul className="dropdown-menu-list">
                           <li className="dropdown-menu-item">
-                              <a href="#" onClick={() => handleSettingChange('themeType', 'standard')}>Standard</a>
+                              <a href="#" onClick={() => handleSettingChange('themeType', 'standard')}>{t('settings.standard')}</a>
                           </li>
                           <li className="dropdown-menu-item">
-                              <a href="#" onClick={() => handleSettingChange('themeType', 'glass')}>Glass</a>
+                              <a href="#" onClick={() => handleSettingChange('themeType', 'glass')}>{t('settings.glass')}</a>
                           </li>
                       </ul>
                   </Dropdown>
             </div>
 
             <div className="settings-group">
-              <label className="settings-label">Background</label>
+              <label className="settings-label">{t('settings.background')}</label>
                 <Dropdown
                   id="background"
-                  buttonContent={<span>{userSettings?.background}</span>}
+                  buttonContent={<span>{t(`settings.${userSettings?.background}`)}</span>}
                   buttonClassName="min-w-150"
                   key={userSettings?.background}
                 >
                   <ul className="dropdown-menu-list">
                     <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('background', 'solid')}>Solid</a>
+                      <a href="#" onClick={() => handleSettingChange('background', 'solid')}>{t('settings.solid')}</a>
                     </li>
                     <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('background', 'noise')}>Noise</a>
+                      <a href="#" onClick={() => handleSettingChange('background', 'noise')}>{t('settings.noise')}</a>
                     </li>
                     <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('background', 'gradient')}>Gradient</a>
+                      <a href="#" onClick={() => handleSettingChange('background', 'gradient')}>{t('settings.gradient')}</a>
                     </li>
                   </ul>
                 </Dropdown>
@@ -119,9 +131,9 @@ const SettingsContent: React.FC = () => {
           </div>
 
           <div className="settings-section">
-            <h2 className="settings-section-title">Preferences</h2>
+            <h2 className="settings-section-title">{t('settings.preferences')}</h2>
             <div className="settings-group">
-              <label className="settings-label">Language</label>
+              <label className="settings-label">{t('settings.language')}</label>
 
                 <Dropdown
                   id="language"
@@ -142,7 +154,7 @@ const SettingsContent: React.FC = () => {
             </div>
 
             <div className="settings-group">
-              <label className="settings-label">Hide text in note files</label>
+              <label className="settings-label">{t('settings.hideNoteText')}</label>
               <label className="toggle-switch">
                 <input
                   type="checkbox"
@@ -154,7 +166,7 @@ const SettingsContent: React.FC = () => {
             </div>
 
             <div className="settings-group">
-              <label className="settings-label">Enable reminder notifications</label>
+              <label className="settings-label">{t('settings.notifications')}</label>
               <label className="toggle-switch">
                 <input
                   type="checkbox"
@@ -167,10 +179,58 @@ const SettingsContent: React.FC = () => {
           </div>
 
           <div className="settings-section">
-            <h2 className="settings-section-title">Contact & Support</h2>
+            <h2 className="settings-section-title">{t('settings.noteTypes')}</h2>
+            <div className="settings-group input_button_group">
+                <input
+                  type="text"
+                  className="settings-input"
+                  placeholder={t('settings.newNoteType')}
+                  value={newNoteType}
+                  onChange={(e) => setNewNoteType(e.target.value)}
+                  style={{ flex: 1 }}
+                />
+                <button 
+                  className="settings-button"
+                  onClick={handleAddNoteType}
+                  disabled={!newNoteType.trim() || noteTypes.includes(newNoteType.trim())}
+                >
+                  {t('settings.add')}
+                </button>
+            </div>
+            <div className="note-types-list">
+                {noteTypes.map((type) => (
+                  <div key={type} className="note-type-item" style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center',
+                    padding: '8px',
+                    borderBottom: '1px solid var(--border-color)'
+                  }}>
+                    <span>{type}</span>
+                    {type !== 'не выбрано' && (
+                      <button
+                        className="delete-button"
+                        onClick={() => removeNoteType(type)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: 'var(--danger-color)',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+          </div>
+
+          <div className="settings-section">
+            <h2 className="settings-section-title">{t('settings.contactSupport')}</h2>
             <div className="settings-buttons">
-              <button className="settings-button">Suggest an Idea</button>
-              <button className="settings-button">Donate</button>
+              <button className="settings-button">{t('settings.suggestIdea')}</button>
+              <button className="settings-button">{t('settings.donate')}</button>
             </div>
 
             <div className="settings-social-buttons">

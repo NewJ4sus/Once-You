@@ -16,9 +16,9 @@ const Notes: React.FC = () => {
         onNoteSelect={setSelectedNoteId}
         selectedNoteId={selectedNoteId}
       />
-      <NoteContent selectedNoteId={selectedNoteId}/>
+      <NoteContent noteId={selectedNoteId}/>
     </>
   );
 };
 
-export default Notes; 
+export default Notes;
