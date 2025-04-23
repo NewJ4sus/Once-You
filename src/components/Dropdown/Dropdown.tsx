@@ -132,10 +132,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 role="menu"
             >
                 {React.Children.map(children, child => {
-                    if (React.isValidElement(child)) {
-                        return React.cloneElement(child as React.ReactElement<DropdownChildProps>, {
+                    if (React.isValidElement<DropdownChildProps>(child)) {
+                        return React.cloneElement(child, {
                             onClick: handleItemClick,
-                            role: "menuitem",
                             className: `${child.props.className || ''} dropdown-item`
                         });
                     }

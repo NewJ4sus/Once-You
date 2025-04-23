@@ -169,7 +169,7 @@ const FolderNotes: React.FC<FolderNotesProps> = ({ onNoteSelect, selectedNoteId 
           if (remainingNotes.length > 0) {
             onNoteSelect(remainingNotes[0].id); // выберем первую оставшуюся
           } else {
-            onNoteSelect(null); // если не осталось — сбросим выбор
+            onNoteSelect(''); // если не осталось — сбросим выбор
           }
         }
       }

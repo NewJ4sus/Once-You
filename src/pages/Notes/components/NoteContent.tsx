@@ -202,7 +202,7 @@ const NoteContent: React.FC<NoteContentProps> = ({ noteId }) => {
                   ...block,
                   data: {
                     style: blockData.style || 'unordered',
-                    items: blockData.items.filter(item => item !== null && item !== undefined)
+                    items: blockData.items.filter((item: string) => item !== null && item !== undefined)
                   }
                 };
               }
