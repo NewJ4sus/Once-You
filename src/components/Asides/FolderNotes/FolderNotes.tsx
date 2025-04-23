@@ -120,19 +120,19 @@ const FolderNotes: React.FC<FolderNotesProps> = ({ onNoteSelect, selectedNoteId 
 
     try {
       const userId = auth.currentUser.uid;
-      const now = serverTimestamp(); // Use serverTimestamp for consistency
+      const now = serverTimestamp();
       
-      // Create content document first
+      // Create content document with proper initial structure
       const contentDoc = await addDoc(collection(db, 'noteContents'), {
         content: {
-          blocks: [
-            {
-              type: "paragraph",
-              data: {
-                text: "Start writing your note here..."
-              }
+          time: Date.now(),
+          blocks: [{
+            type: "paragraph",
+            data: {
+              text: " "
             }
-          ]
+          }],
+          version: "2.26.5"
         },
         createdAt: now,
         lastEditedAt: now
@@ -140,14 +140,13 @@ const FolderNotes: React.FC<FolderNotesProps> = ({ onNoteSelect, selectedNoteId 
 
       // Create note document
       const noteDoc = await addDoc(collection(db, 'notes', userId, 'userNotes'), {
-        title: 'Новая заметка',
-        type: 'не выбрано',
+        title: t('notes.newNote'),
+        type: t('notes.noSelected'),
         createdAt: now,
         lastEditedAt: now,
         contentRef: contentDoc.id
       });
 
-      // Select the new note
       onNoteSelect(noteDoc.id);
     } catch (error) {
       console.error('Error adding note:', error);
@@ -156,17 +155,23 @@ const FolderNotes: React.FC<FolderNotesProps> = ({ onNoteSelect, selectedNoteId 
 
   const handleDeleteNote = async (noteId: string) => {
     if (!auth.currentUser) return;
-
+  
     try {
       const userId = auth.currentUser.uid;
       const note = notes.find(n => n.id === noteId);
-      
+  
       if (note) {
-        // Delete content document
         await deleteDoc(doc(db, 'noteContents', note.contentRef));
-        
-        // Delete note document
         await deleteDoc(doc(db, 'notes', userId, 'userNotes', noteId));
+  
+        if (selectedNoteId === noteId) {
+          const remainingNotes = notes.filter(n => n.id !== noteId);
+          if (remainingNotes.length > 0) {
+            onNoteSelect(remainingNotes[0].id); // выберем первую оставшуюся
+          } else {
+            onNoteSelect(null); // если не осталось — сбросим выбор
+          }
+        }
       }
     } catch (error) {
       console.error('Error deleting note:', error);

@@ -99,14 +99,20 @@ export const Dropdown: React.FC<DropdownProps> = ({
         e.stopPropagation();
         
         const target = e.target as HTMLElement;
-        const selectedText = target.textContent;
-        setSelectedItem(selectedText || buttonContent);
-        
-        if (onSelect) {
-            onSelect(e);
+        const selectedText = Array.from(target.childNodes)
+            .filter(node => node.nodeType === Node.TEXT_NODE)
+            .map(node => node.textContent)
+            .join('').trim();
+
+        if (selectedText) {
+            setSelectedItem(selectedText);
+            
+            if (onSelect) {
+                onSelect(e);
+            }
+            setIsOpen(false);
+            setActiveDropdown(null);
         }
-        setIsOpen(false);
-        setActiveDropdown(null);
     };
 
     return (
@@ -114,16 +120,23 @@ export const Dropdown: React.FC<DropdownProps> = ({
             <button 
                 className={`dropdown-button ${buttonClassName}`}
                 onClick={toggleDropdown}
+                aria-haspopup="true"
+                aria-expanded={isOpen}
             >
                 {selectedItem}
                 {showArrow && <SVG name="arrow_down" />}
             </button>
             
-            <div className={`dropdown-menu ${menuClassName} ${isOpen ? 'active' : ''}`}>
+            <div 
+                className={`dropdown-menu ${menuClassName} ${isOpen ? 'active' : ''}`}
+                role="menu"
+            >
                 {React.Children.map(children, child => {
                     if (React.isValidElement(child)) {
                         return React.cloneElement(child as React.ReactElement<DropdownChildProps>, {
-                            onClick: handleItemClick
+                            onClick: handleItemClick,
+                            role: "menuitem",
+                            className: `${child.props.className || ''} dropdown-item`
                         });
                     }
                     return child;

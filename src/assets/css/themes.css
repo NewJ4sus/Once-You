@@ -4,6 +4,7 @@
   --background-secondary: #F8F7FD;
   --background-tertiary: #eeebff;
   --background-active-day: #e3f2fd;
+  --color-background-item: #FFFFFF;
 
   --text-primary: #272728;
   --text-secondary: #7B7B80;
@@ -24,6 +25,7 @@
   --background-secondary: #222222;
   --background-tertiary: #181717;
   --background-active-day: #504b4b;
+  --color-background-item: #141414;
 
   --text-primary: #E0E0E0;
   --text-secondary: #A0A0B0;

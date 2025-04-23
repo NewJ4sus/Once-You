@@ -27,14 +27,19 @@
 
 .main-header-controls{
     display: flex;
-    gap: 10px;
     align-items: center;
+}
+
+.main-header-top-left{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .note-title{
     width: 100%;
     font-size: 20px;
-    padding: 20px 0px;
+    padding: 10px 0px;
     font-weight: 600;
     color: var(--text-primary);
     border: none;
@@ -82,3 +87,71 @@
       background-position: -200% 0;
     }
   }
+
+
+  .kdb-save-status{
+    font-size: 12px;
+    font-weight: 400;
+    color:  var(--accent-color);
+  }
+
+  .kdb-saving-status{
+    font-size: 12px;
+    font-weight: 400;
+    color:  var(--warning-color);
+  }
+
+  .kdb-error-status{
+    font-size: 12px;
+    font-weight: 400;
+    color:  var(--danger-color);
+  }
+  
+
+  .ce-block--selected .ce-block__content{
+    background-color: var(--background-secondary);
+  }
+
+  .ce-popover__container{
+    background-color: var(--background-secondary);
+    border: 1px solid var(--border-color);
+  }
+
+  .ce-popover--opened > .ce-popover__container{
+    border: 1px solid var(--border-color);
+  }
+
+  .ce-popover__search{
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-color);
+  }
+
+  .cdx-search-field__input {
+    color: var(--text-primary);
+  }
+
+  .ce-popover-item{
+    color: var(--text-primary);
+  }
+
+  .ce-popover-item:hover{
+    background-color: var(--background-primary);
+  }
+
+  .ce-popover-item:hover:not(.ce-popover-item--no-hover){
+    background-color: var(--color-background-item);
+  }
+
+  .ce-toolbar__plus{
+    color: var(--text-primary);
+  }
+  .ce-toolbar__plus:hover{
+    background-color: var(--background-secondary);
+  }
+  .ce-toolbar__settings-btn{
+    color: var(--text-primary);
+  }
+  .ce-toolbar__settings-btn:hover{
+    background-color: var(--background-secondary);
+  }
+  

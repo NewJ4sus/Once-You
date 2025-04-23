@@ -9,7 +9,7 @@ export default {
     information: 'Information',
   },
   task: {
-    title: 'Task title...',
+    title: 'Task name...',
     description: 'Task description...',
     currentTask: 'Current Tasks',
     completedTask: 'Completed',
@@ -102,10 +102,7 @@ export default {
     newNoteType: 'New Note Type',
     add: 'Add',
 
-    contactSupport: 'Contact Support',
-    suggestIdea: 'Suggest Idea',
-    donate: 'Donate',
-
+    project: 'Search project',
     noSelected: 'No selected',
 
     dark: 'Dark',
@@ -115,5 +112,20 @@ export default {
     standard: 'Standard',
     glass: 'Glass',
     solid: 'Solid',
+  },
+  information: {
+    aboutProject: 'About Project',
+    aboutProjectDescription: 'OnceYou is a modern task management application designed to help you organize your daily activities efficiently and effectively. Our goal is to make task management simple and intuitive.',
+    keyFeatures: 'Key Features',
+    keyFeaturesDescription: 'Create, organize, and track your tasks easily',
+    taskManagement: 'Task Management',
+    taskManagementDescription: 'Create, organize, and track your tasks easily',
+    userFriendlyInterface: 'User-Friendly Interface',
+    userFriendlyInterfaceDescription: 'Clean and intuitive design for the best user experience',
+    progressTracking: 'Progress Tracking',
+    progressTrackingDescription: 'Monitor your productivity and task completion',
+    contact: 'Contact',
+    contactDescription: 'Have questions or suggestions? Feel free to reach out to us!'
+    
   }
 };

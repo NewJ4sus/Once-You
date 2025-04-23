@@ -9,7 +9,7 @@ export default {
     information: 'Информация',
   },
   task: {
-    title: 'Задача...',
+    title: 'Название задачи...',
     description: 'Описание задачи...',
     currentTask: 'Текущие задачи',
     completedTask: 'Выполненные',
@@ -102,9 +102,7 @@ export default {
     newNoteType: 'Новый тип заметки',
     add: 'Добавить',
 
-    contactSupport: 'Связаться с поддержкой',
-    suggestIdea: 'Предложить идею',
-    donate: 'Пожертвовать',
+    project: 'Найти проект',
 
     noSelected: 'Не выбрано',
 
@@ -117,5 +115,20 @@ export default {
     solid: 'Сплошной',
     noise: 'Шум',
     gradient: 'Градиент',
+  },
+  information: {
+    aboutProject: 'О проекте',
+    aboutProjectDescription: 'OnceYou - это современная система управления задачами, которая помогает организовать ваши ежедневные дела эффективно и просто. Наша цель - сделать управление задачами простым и интуитивным.',
+    keyFeatures: 'Ключевые особенности',
+    keyFeaturesDescription: 'Создавайте, организуйте и отслеживайте свои задачи легко и просто',
+    taskManagement: 'Управление задачами',
+    taskManagementDescription: 'Создавайте, организуйте и отслеживайте свои задачи легко и просто',
+    userFriendlyInterface: 'Пользовательский интерфейс',
+    userFriendlyInterfaceDescription: 'Чистый и интуитивный дизайн для лучшего пользовательского опыта',
+    progressTracking: 'Отслеживание прогресса',
+    progressTrackingDescription: 'Отслеживайте свою продуктивность и завершение задач',
+    contact: 'Контакты',
+    contactDescription: 'Есть вопросы или предложения? Свяжитесь с нами!'
+    
   }
 };

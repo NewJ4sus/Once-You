@@ -87,7 +87,7 @@ const SettingsContent: React.FC = () => {
                 </Dropdown>
             </div>
 
-            <div className="settings-group">
+            {/* <div className="settings-group">
                 <label className="settings-label">{t('settings.themeType')}</label>
                 
                   <Dropdown 
@@ -105,9 +105,9 @@ const SettingsContent: React.FC = () => {
                           </li>
                       </ul>
                   </Dropdown>
-            </div>
+            </div> */}
 
-            <div className="settings-group">
+            {/* <div className="settings-group">
               <label className="settings-label">{t('settings.background')}</label>
                 <Dropdown
                   id="background"
@@ -127,7 +127,7 @@ const SettingsContent: React.FC = () => {
                     </li>
                   </ul>
                 </Dropdown>
-            </div>
+            </div> */}
           </div>
 
           <div className="settings-section">
@@ -227,12 +227,7 @@ const SettingsContent: React.FC = () => {
           </div>
 
           <div className="settings-section">
-            <h2 className="settings-section-title">{t('settings.contactSupport')}</h2>
-            <div className="settings-buttons">
-              <button className="settings-button">{t('settings.suggestIdea')}</button>
-              <button className="settings-button">{t('settings.donate')}</button>
-            </div>
-
+            <h2 className="settings-section-title">{t('settings.project')}</h2>
             <div className="settings-social-buttons">
               <Link to="/settings/social/github" className="settings-social-button">
                 <i className="fa-brands fa-github"></i>

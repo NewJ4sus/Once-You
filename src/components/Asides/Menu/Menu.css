@@ -115,6 +115,31 @@
   .sidebar-menu {
     width: 100%;
   }
+
+  /* .sidebar-menu {
+    width: 100%;
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    border-top: 2px solid var(--border-color);
+    border-right: none;
+    border-radius: 0;
+    padding: 0;
+  }
+  .sidebar-menu-list{
+    flex-direction: row;
+  }
+  .sidebar-menu-item span{
+    display: none;
+  }
+  .mobile-hidden{
+    display: none;
+  } */
 }
 @media screen and (max-width: 480px) {
 }
