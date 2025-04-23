@@ -14,10 +14,11 @@ import { useNoteTypes } from '@/context/NoteTypesContext';
 import { useTranslation } from '@/i18n/TranslationContext';
 
 interface NoteContentProps {
-  noteId: string | null;
+  noteId: string;
+  initialContent: OutputData;
 }
 
-const NoteContent: React.FC<NoteContentProps> = ({ noteId }) => {
+const NoteContent: React.FC<NoteContentProps> = ({ noteId, initialContent }) => {
   const { noteTypes } = useNoteTypes();
   const { t } = useTranslation();
 
@@ -28,24 +29,33 @@ const NoteContent: React.FC<NoteContentProps> = ({ noteId }) => {
   const [fileType, setFileType] = useState('не выбрано');
   const [isLoading, setIsLoading] = useState(true);
   const [isEditorReady, setIsEditorReady] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'error'>('saved');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   useEffect(() => {
     if (noteId) {
       fetchNoteContent();
     }
+    return () => {
+      // Очистка старого редактора при смене заметки
+      if (editorRef.current) {
+        editorRef.current.destroy();
+        editorRef.current = null;
+      }
+    };
   }, [noteId]);
 
   useEffect(() => {
-    if (!isLoading && noteId && noteContent !== null) {
+    // Очищаем редактор, если он уже существует
+    if (editorRef.current) {
+      editorRef.current.destroy();
+      editorRef.current = null;
+    }
+  
+    // Проверяем, что все данные загрузились и редактор не был создан
+    if (!isLoading && noteId && noteContent !== null && Array.isArray(noteContent.blocks)) {
       initializeEditor();
     }
-    return () => destroyEditor();
-  }, [isLoading, noteContent]);
-
-  useEffect(() => {
-    console.log('Editor ready state changed:', isEditorReady);
-  }, [isEditorReady]);
+  }, [isLoading, noteId, noteContent]);
 
   const fetchNoteContent = async () => {
     setIsLoading(true);
@@ -94,79 +104,109 @@ const NoteContent: React.FC<NoteContentProps> = ({ noteId }) => {
     setFileType(t('notes.noSelected'));
     setIsLoading(false);
   };
-
-  const initializeEditor = async () => {
-    if (!editorContainerRef.current) return;
-
-    if (editorRef.current) {
-      await editorRef.current.isReady;
-      await editorRef.current.destroy();
-      editorRef.current = null;
-    }
-
+  
+  const initializeEditor = () => {
+    console.log("⚙️ Инициализация редактора", noteContent);
+    if (!editorContainerRef.current || !noteContent || !Array.isArray(noteContent.blocks)) return;
+  
     const editor = new EditorJS({
       holder: editorContainerRef.current,
-      tools: {
-        header: { class: Header as BlockToolConstructable, config: { placeholder: 'Заголовок', levels: [1, 2, 3], defaultLevel: 2 } },
-        paragraph: { class: Paragraph as BlockToolConstructable, inlineToolbar: true },
-        list: { class: List as BlockToolConstructable, inlineToolbar: true, config: { defaultStyle: 'unordered' } },
-        code: { class: Code as BlockToolConstructable, config: { placeholder: t('notes.code') } },
-        inlineCode: { class: InlineCode as InlineToolConstructable },
-        quote: { class: Quote, inlineToolbar: true, config: { quotePlaceholder: t('notes.quotePlaceholder'), captionPlaceholder: t('notes.captionPlaceholder') } },
+      data: noteContent,
+      onReady: () => {
+        console.log("🟢 Editor готов");
+        setIsEditorReady(true);
+        editorRef.current = editor;
       },
-      data: noteContent || { blocks: [] },
-      onReady: () => setIsEditorReady(true),
       onChange: async () => {
-        if (editorRef.current) {
-          try {
-            const savedData = await editorRef.current.save();
-            saveNoteContent(savedData);
-          } catch (error) {
-            console.error('Save error:', error);
-          }
+        console.log("✏️ onChange triggered");
+        setSaveStatus('saving');
+        try {
+          const output = await editor.save();
+          console.log('Editor.js output:', output);
+          saveNoteContent(output);
+        } catch (err) {
+          console.error('Saving failed: ', err);
+          setSaveStatus('error');
         }
       },
+      tools: {
+        header: Header as BlockToolConstructable,
+        paragraph: Paragraph as BlockToolConstructable,
+        list: List as BlockToolConstructable,
+        quote: Quote as BlockToolConstructable,
+        code: Code as BlockToolConstructable,
+        inlineCode: InlineCode as InlineToolConstructable
+      }
     });
-
-    editorRef.current = editor;
-  };
-
-  const destroyEditor = async () => {
-    if (editorRef.current) {
-      await editorRef.current.isReady;
-      await editorRef.current.destroy();
-      editorRef.current = null;
-    }
   };
 
   const saveNoteContent = async (content: OutputData) => {
-    if (!noteId || !auth.currentUser || !isEditorReady) return;
+    if (!noteId || !auth.currentUser || !editorRef.current) {
+      console.warn("⛔ Не хватает данных для сохранения", {
+        noteId,
+        user: auth.currentUser,
+        editorInstance: !!editorRef.current,
+      });
+      return;
+    }
 
     try {
       setSaveStatus('saving');
       const userId = auth.currentUser.uid;
-      const cleanBlocks = content.blocks.map(block => ({
-        ...block,
-        data: Object.fromEntries(Object.entries(block.data || {}).filter(([, v]) => v !== undefined))
-      }));
-
-      const contentToSave = { blocks: cleanBlocks, time: content.time || Date.now(), version: content.version || '2.26.5' };
-      const noteDoc = await getDoc(doc(db, 'notes', userId, 'userNotes', noteId));
-
-      if (noteDoc.exists()) {
-        const { contentRef } = noteDoc.data();
-
-        if (contentRef) {
-          await updateDoc(doc(db, 'noteContents', contentRef), { content: contentToSave, lastEditedAt: new Date() });
-          await updateDoc(doc(db, 'notes', userId, 'userNotes', noteId), { lastEditedAt: new Date() });
-        }
+  
+      const cleanBlocks = content.blocks
+        .map(block => ({
+          ...block,
+          data: Object.fromEntries(Object.entries(block.data || {}).filter(([, v]) => v !== undefined && v !== ''))
+        }))
+        .filter(block => block.data.text); // не сохраняем пустые
+  
+      const contentToSave = {
+        blocks: cleanBlocks,
+        time: content.time || Date.now(),
+        version: content.version || '2.30.0',
+      };
+  
+      console.log("🔥 Saving content:", contentToSave);
+  
+      const noteDocRef = doc(db, 'notes', userId, 'userNotes', noteId);
+      const noteDoc = await getDoc(noteDocRef);
+  
+      if (!noteDoc.exists()) {
+        console.error("❌ noteDoc не найден");
+        setSaveStatus('error');
+        return;
       }
+  
+      const { contentRef } = noteDoc.data();
+      if (!contentRef) {
+        console.error("❌ contentRef отсутствует в noteDoc");
+        setSaveStatus('error');
+        return;
+      }
+  
+      const contentDocRef = doc(db, 'noteContents', contentRef);
+      await updateDoc(contentDocRef, {
+        content: contentToSave,
+        lastEditedAt: new Date(),
+      }).catch(err => {
+        console.error("❌ Ошибка при updateDoc (noteContents):", err);
+      });
+      console.log("📥 saveNoteContent вызван", content);
+  
+      await updateDoc(noteDocRef, {
+        lastEditedAt: new Date(),
+      }).catch(err => {
+        console.error("❌ Ошибка при updateDoc (notes):", err);
+      });
+  
       setSaveStatus('saved');
     } catch (error) {
-      console.error('Error saving content:', error);
+      console.error('❌ Ошибка в saveNoteContent:', error);
       setSaveStatus('error');
     }
   };
+  
 
   const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
@@ -213,9 +253,10 @@ const NoteContent: React.FC<NoteContentProps> = ({ noteId }) => {
           <div className="main-header-top">
               <div className="main-header-top-left">
                 <div className="save-status">
-                    {saveStatus === 'saved' && <kbd className="kdb-save-status">сохранено</kbd>}
-                    {saveStatus === 'saving' && <kbd className="kdb-saving-status">сохранение</kbd>}
-                    {saveStatus === 'error' && <kbd className="kdb-error-status">ошибка</kbd>}
+                    {saveStatus === 'saving' ? <kbd className="kdb-saving-status">Сохранение</kbd> :
+                    saveStatus === 'saved' ? <kbd className="kdb-save-status">Сохранено</kbd> :
+                    saveStatus === 'error' ? <kbd className="kdb-error-status">Ошибка</kbd> : 
+                    <kbd className="kdb-default-status">Без изменений</kbd>}
                 </div> 
                 <input
                   type="text"

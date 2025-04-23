@@ -129,7 +129,7 @@ const FolderNotes: React.FC<FolderNotesProps> = ({ onNoteSelect, selectedNoteId 
           blocks: [{
             type: "paragraph",
             data: {
-              text: " "
+              text: ""
             }
           }],
           version: "2.26.5"

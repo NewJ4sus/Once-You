@@ -106,6 +106,12 @@
     font-weight: 400;
     color:  var(--danger-color);
   }
+
+  .kdb-default-status{
+    font-size: 12px;
+    font-weight: 400;
+    color:  var(--text-primary);
+  }
   
 
   .ce-block--selected .ce-block__content{
