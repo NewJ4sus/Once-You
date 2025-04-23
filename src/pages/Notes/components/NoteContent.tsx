@@ -7,6 +7,8 @@ import List from '@editorjs/list';
 import Quote from '@editorjs/quote';
 import Code from '@editorjs/code';
 import InlineCode from '@editorjs/inline-code';
+import Table from '@editorjs/table';
+// import Link from '@editorjs/link';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db, auth } from '@/config/firebase';
 import { DropdownProvider, Dropdown } from '@/components/Dropdown/Dropdown';
@@ -14,11 +16,10 @@ import { useNoteTypes } from '@/context/NoteTypesContext';
 import { useTranslation } from '@/i18n/TranslationContext';
 
 interface NoteContentProps {
-  noteId: string;
-  initialContent: OutputData;
+  noteId: string | null;
 }
 
-const NoteContent: React.FC<NoteContentProps> = ({ noteId, initialContent }) => {
+const NoteContent: React.FC<NoteContentProps> = ({ noteId }) => {
   const { noteTypes } = useNoteTypes();
   const { t } = useTranslation();
 
@@ -28,7 +29,6 @@ const NoteContent: React.FC<NoteContentProps> = ({ noteId, initialContent }) => 
   const [title, setTitle] = useState('');
   const [fileType, setFileType] = useState('не выбрано');
   const [isLoading, setIsLoading] = useState(true);
-  const [isEditorReady, setIsEditorReady] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   useEffect(() => {
@@ -63,26 +63,59 @@ const NoteContent: React.FC<NoteContentProps> = ({ noteId, initialContent }) => 
       resetState();
       return;
     }
-
+  
     try {
       const userId = auth.currentUser.uid;
       const noteDocRef = doc(db, 'notes', userId, 'userNotes', noteId);
       const noteDoc = await getDoc(noteDocRef);
-
+  
       if (noteDoc.exists()) {
         const { title = '', type = t('notes.noSelected'), contentRef } = noteDoc.data();
         setTitle(title);
         setFileType(type);
-
+  
         if (contentRef) {
           const contentDoc = await getDoc(doc(db, 'noteContents', contentRef));
           if (contentDoc.exists()) {
             const contentData = contentDoc.data().content;
-            setNoteContent({
-              blocks: contentData.blocks || [],
+  
+            // Преобразуем блоки
+            const processedBlocks = contentData.blocks.map((block: any) => {
+              if (block.type === 'table' && block.data.content) {
+                const { rows, cols, content, withHeadings } = block.data;
+                const tableContent = Array(rows).fill(null).map(() => Array(cols).fill(''));
+                Object.entries(content).forEach(([key, value]) => {
+                  const [row, col] = key.split('-').map(Number);
+                  tableContent[row][col] = value;
+                });
+
+                return {
+                  ...block,
+                  data: {
+                    withHeadings,
+                    content: tableContent
+                  }
+                };
+              } else if (block.type === 'link') {
+                // Упрощенная структура для link блока
+                return {
+                  id: block.id,
+                  type: 'link',
+                  data: {
+                    link: block.data.link || ''
+                  }
+                };
+              }
+              return block;
+            });
+
+            const formattedContent = {
+              blocks: processedBlocks,
               time: contentData.time || Date.now(),
               version: contentData.version || '2.26.5',
-            });
+            };
+  
+            setNoteContent(formattedContent);
           } else {
             setNoteContent({ blocks: [] });
           }
@@ -106,23 +139,18 @@ const NoteContent: React.FC<NoteContentProps> = ({ noteId, initialContent }) => 
   };
   
   const initializeEditor = () => {
-    console.log("⚙️ Инициализация редактора", noteContent);
     if (!editorContainerRef.current || !noteContent || !Array.isArray(noteContent.blocks)) return;
   
     const editor = new EditorJS({
       holder: editorContainerRef.current,
       data: noteContent,
       onReady: () => {
-        console.log("🟢 Editor готов");
-        setIsEditorReady(true);
         editorRef.current = editor;
       },
       onChange: async () => {
-        console.log("✏️ onChange triggered");
         setSaveStatus('saving');
         try {
           const output = await editor.save();
-          console.log('Editor.js output:', output);
           saveNoteContent(output);
         } catch (err) {
           console.error('Saving failed: ', err);
@@ -135,52 +163,121 @@ const NoteContent: React.FC<NoteContentProps> = ({ noteId, initialContent }) => 
         list: List as BlockToolConstructable,
         quote: Quote as BlockToolConstructable,
         code: Code as BlockToolConstructable,
-        inlineCode: InlineCode as InlineToolConstructable
+        inlineCode: InlineCode as InlineToolConstructable,
+        table: {
+          class: Table as BlockToolConstructable,
+          inlineToolbar: true,
+          config: {
+            rows: 2,
+            cols: 3,
+          },
+        },
+        // link: {
+        //   class: Link as BlockToolConstructable,
+        //   config: {
+        //     endpoint: '',
+        //   }
+        // }
       }
     });
   };
 
   const saveNoteContent = async (content: OutputData) => {
     if (!noteId || !auth.currentUser || !editorRef.current) {
-      console.warn("⛔ Не хватает данных для сохранения", {
-        noteId,
-        user: auth.currentUser,
-        editorInstance: !!editorRef.current,
-      });
       return;
     }
-
+  
     try {
       setSaveStatus('saving');
       const userId = auth.currentUser.uid;
   
       const cleanBlocks = content.blocks
-        .map(block => ({
-          ...block,
-          data: Object.fromEntries(Object.entries(block.data || {}).filter(([, v]) => v !== undefined && v !== ''))
-        }))
-        .filter(block => block.data.text); // не сохраняем пустые
-  
+        .map(block => {
+          const blockData = { ...block.data };
+          
+          switch (block.type) {
+            case 'list':
+              if (Array.isArray(blockData.items)) {
+                return {
+                  ...block,
+                  data: {
+                    style: blockData.style || 'unordered',
+                    items: blockData.items.filter(item => item !== null && item !== undefined)
+                  }
+                };
+              }
+              break;
+
+            case 'table':
+              if (blockData.content) {
+                const tableContent: Record<string, string> = {};
+                blockData.content.forEach((row: string[], rowIndex: number) => {
+                  row.forEach((cell: string, colIndex: number) => {
+                    tableContent[`${rowIndex}-${colIndex}`] = cell || '';
+                  });
+                });
+
+                return {
+                  ...block,
+                  data: {
+                    withHeadings: !!blockData.withHeadings,
+                    content: tableContent,
+                    rows: blockData.content.length,
+                    cols: blockData.content[0]?.length || 0
+                  }
+                };
+              }
+              break;
+
+            case 'link':
+              return {
+                id: block.id,
+                type: 'link',
+                data: {
+                  link: blockData.link || ''
+                }
+              };
+
+            default:
+              return {
+                ...block,
+                data: Object.fromEntries(
+                  Object.entries(blockData)
+                    .filter(([, value]) => value !== undefined && value !== null && value !== '')
+                )
+              };
+          }
+          return block;
+        })
+        .filter(block => {
+          switch (block.type) {
+            case 'list':
+              return block.data.items && block.data.items.length > 0;
+            case 'table':
+              return block.data.content && Object.keys(block.data.content).length > 0;
+            case 'link':
+              return block.data.link && block.data.link.trim() !== '';
+            default:
+              return block.data.text || Object.keys(block.data).length > 0;
+          }
+        });
+
       const contentToSave = {
         blocks: cleanBlocks,
         time: content.time || Date.now(),
         version: content.version || '2.30.0',
       };
-  
-      console.log("🔥 Saving content:", contentToSave);
-  
+
       const noteDocRef = doc(db, 'notes', userId, 'userNotes', noteId);
       const noteDoc = await getDoc(noteDocRef);
   
       if (!noteDoc.exists()) {
-        console.error("❌ noteDoc не найден");
         setSaveStatus('error');
         return;
       }
   
       const { contentRef } = noteDoc.data();
       if (!contentRef) {
-        console.error("❌ contentRef отсутствует в noteDoc");
         setSaveStatus('error');
         return;
       }
@@ -189,15 +286,10 @@ const NoteContent: React.FC<NoteContentProps> = ({ noteId, initialContent }) => 
       await updateDoc(contentDocRef, {
         content: contentToSave,
         lastEditedAt: new Date(),
-      }).catch(err => {
-        console.error("❌ Ошибка при updateDoc (noteContents):", err);
       });
-      console.log("📥 saveNoteContent вызван", content);
   
       await updateDoc(noteDocRef, {
         lastEditedAt: new Date(),
-      }).catch(err => {
-        console.error("❌ Ошибка при updateDoc (notes):", err);
       });
   
       setSaveStatus('saved');
