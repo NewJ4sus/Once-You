@@ -295,7 +295,7 @@ const RemindersContent: React.FC = () => {
         </div>
 
         {/* Edit Reminder Modal */}
-        <Modal id="EditModalReminder" title="Edit">
+        <Modal id="EditModalReminder">
           <div className='modal-edit-task'>
             <input 
               className='modal-edit-task-input' 

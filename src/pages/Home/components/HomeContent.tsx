@@ -6,7 +6,6 @@ const HomeContent: React.FC = () => {
 
   const handleClick = () => {
     notify('Напоминание', 'Вы должны выполнить задачу', {
-      type: 'medium',
       sound: true,
       onClick: () => window.location.href = '/tasks',
     });

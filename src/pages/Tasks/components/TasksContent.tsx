@@ -373,7 +373,7 @@ const TasksContent: React.FC = () => {
       </div>
 
       {/* Edit Task Modal */}
-      <Modal id="EditModalTask" title="Edit">
+      <Modal id="EditModalTask">
         <div className='modal-edit-task'>
           <input 
             className='modal-edit-task-input' 
