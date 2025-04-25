@@ -12,7 +12,7 @@
     outline: none;
     background-color: transparent;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 6px;
     color: var(--text-primary);
   }
   
@@ -45,7 +45,7 @@
     background-color: var(--background-secondary);
     border: 1px solid var(--border-color);
     box-shadow: 0 0 10px 0 var(--shadow-color);
-    border-radius: 20px 10px 20px 20px;
+    border-radius: 10px 5px 10px 10px;
     padding: 10px;
     min-width: 150px;
     z-index: 8888;
@@ -91,7 +91,7 @@
     width: 100%;
     padding: 10px;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 6px;
     background-color: var(--background-secondary);
   }
   

@@ -61,7 +61,7 @@ const Headers: React.FC<HeadersProps> = ({ namePage }) => {
               </li>
           )}
           <div className="mobile-menu-button" onClick={toggleMenu}>
-            <SVG name="menu"/>
+              <SVG name="menu"/>
           </div>
         </div>
       </div>

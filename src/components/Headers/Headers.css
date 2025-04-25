@@ -27,7 +27,7 @@ header {
 .header-right {
   position: relative;
   height: 100%;
-  width: 300px;
+  min-width: 300px;
   padding: 0 35px;
   display: flex;
   justify-content: space-between;
@@ -51,6 +51,14 @@ header {
   left: 0;
 }
 
+.header-center{
+  width: 100%;
+  padding: 0 15px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
 .header-left__namePage{
   display: none;
   font-size: 18px;
@@ -67,7 +75,7 @@ header {
   width: 40px;
   height: 40px;
   border-radius: 6px;
-  background-color: var(--border-color);
+  background-color: var(--background-secondary);
   justify-content: center;
   align-items: center;
   cursor: pointer;
@@ -77,6 +85,35 @@ header {
   font-size: 12px;
   font-weight: 400;
   color:  var(--accent-color);
+}
+
+.header-right__button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: auto;
+  min-width: 40px;
+  height: 40px;
+  border: none;
+  outline: none;
+  border-radius: 6px;
+  background-color: var(--background-primary);
+  cursor: pointer;
+}
+
+.header-right__button:hover{
+  background-color: var(--background-secondary);
+}
+
+.header-right__button:hover svg{
+  stroke: var(--accent-color);
+}
+
+.header-right__dropdown{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media screen and (max-width: 1200px) {
