@@ -66,7 +66,7 @@ const Menu: React.FC<MenuProps> = ({ namePage }) => {
     <aside className={menuClassName} ref={menuRef}>
         <div className="sidebar-menu-header">
             <ul className="sidebar-menu-list">
-                <li className={`sidebar-menu-item`} style={{opacity: 0.5, pointerEvents: 'none', backgroundColor: 'var(--background-tertiary)', cursor: 'not-allowed'}}>
+                <li className={`sidebar-menu-item ${namePage === "Home" ? "active" : ""}`}>
                     <Link to="/" onClick={handleMenuItemClick}>
                         <SVG name="home"/>
                         <span>{t('menu.home')}</span>
