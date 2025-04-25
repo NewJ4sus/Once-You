@@ -189,7 +189,13 @@ const FolderNotes: React.FC<FolderNotesProps> = ({ onNoteSelect, selectedNoteId 
             <div 
               key={note.id}
               className={`card ${selectedNoteId === note.id ? 'active' : ''}`}
-              onClick={() => onNoteSelect(note.id)}
+              onClick={(e) => {
+                const asideElement = e.currentTarget.closest('aside');
+                if (asideElement?.classList.contains('active')) {
+                  asideElement.classList.remove('active');
+                }
+                onNoteSelect(note.id);
+              }}
             >
               <div className="card-header">
                 <small>{note.type}</small>

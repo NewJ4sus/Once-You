@@ -63,6 +63,13 @@ export default {
     october: 'Октябрь',
     november: 'Ноябрь',
     december: 'Декабрь',
+    loading: 'Загрузка календаря...',
+    tasks: 'Задачи',
+    reminders: 'Напоминания',
+    noTasks: 'Нет задач на этот день',
+    noReminders: 'Нет напоминаний на этот день',
+    planTask: 'Запланировать задачу',
+    planReminder: 'Запланировать напоминание',
   },
   reminders: {
     loading: 'Загрузка напоминаний...',

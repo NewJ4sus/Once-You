@@ -16,7 +16,7 @@ interface UserSettings {
 const defaultSettings: UserSettings = {
     firstName: '',
     lastName: '',
-    themeColor: 'light',
+    themeColor: 'dark',
     themeType: 'standard',
     background: 'solid',
     language: 'ru',

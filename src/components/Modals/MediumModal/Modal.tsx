@@ -1,73 +1,65 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './Modal.css';
 
 interface ModalProps {
   id: string;
   children: React.ReactNode;
-  title?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({ 
   id, 
-  children, 
-  // title = 'Modal'
+  children
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   useEffect(() => {
-    // Function to handle opening the modal
-    const openModal = () => {
-      setIsOpen(true);
-      document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
-    };
-
-    // Function to handle closing the modal
-    const closeModal = () => {
-      setIsOpen(false);
-      document.body.style.overflow = ''; // Restore scrolling
-    };
-
-    // Function to handle clicking outside the modal
     const handleOutsideClick = (e: MouseEvent) => {
-      const modalContent = document.querySelector(`#${id} .modal-content`);
-      if (modalContent && !modalContent.contains(e.target as Node)) {
-        closeModal();
+      const modal = document.getElementById(id);
+      // Проверяем что клик был по самому модальному окну (фону), а не по его содержимому
+      if (modal && e.target === modal) {
+        modal.classList.remove('active');
+        // Разблокируем прокрутку при закрытии
+        document.body.style.overflow = 'auto';
       }
     };
 
-    // Function to handle escape key press
-    const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeModal();
-      }
-    };
+    // Наблюдаем за изменением класса active у модального окна
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          const modal = mutation.target as HTMLElement;
+          if (modal.classList.contains('active')) {
+            // Блокируем прокрутку при открытии
+            document.body.style.overflow = 'hidden';
+          } else {
+            // Разблокируем прокрутку при закрытии
+            document.body.style.overflow = 'auto';
+          }
+        }
+      });
+    });
 
-    // Add event listeners
-    const openButton = document.querySelector(`[data-modal-target="${id}"]`);
-    if (openButton) {
-      openButton.addEventListener('click', openModal);
+    const modal = document.getElementById(id);
+    if (modal) {
+      observer.observe(modal, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
     }
 
-    document.addEventListener('mousedown', handleOutsideClick);
-    document.addEventListener('keydown', handleEscapeKey);
+    // Добавляем слушатель события
+    document.addEventListener('click', handleOutsideClick);
 
-    // Cleanup function
+    // Очищаем слушатели и наблюдатель при размонтировании
     return () => {
-      if (openButton) {
-        openButton.removeEventListener('click', openModal);
-      }
-      document.removeEventListener('mousedown', handleOutsideClick);
-      document.removeEventListener('keydown', handleEscapeKey);
-      document.body.style.overflow = ''; // Ensure scrolling is restored
+      document.removeEventListener('click', handleOutsideClick);
+      observer.disconnect();
+      // Восстанавливаем прокрутку при размонтировании компонента
+      document.body.style.overflow = 'auto';
     };
   }, [id]);
 
   return (
-    <div id={id} className={`modal ${isOpen ? 'active' : ''}`}>
+    <div id={id} className="modal">
       <div className="modal-content">
-        {/* <div className="modal-header">
-          <h2>{title}</h2>
-        </div> */}
         <div className="modal-body">
           {children}
         </div>

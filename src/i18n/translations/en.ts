@@ -63,6 +63,14 @@ export default {
     october: 'October',
     november: 'November',
     december: 'December',
+    loading: 'Loading calendar...',
+    tasks: 'Tasks',
+    reminders: 'Reminders',
+    noTasks: 'No tasks for this day',
+    noReminders: 'No reminders for this day',
+    planTask: 'Plan task',
+    planReminder: 'Plan reminder',
+
   },
   reminders: {
     loading: 'Loading reminders...',

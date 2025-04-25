@@ -297,3 +297,52 @@
         justify-content: start;
     }
 }
+
+
+.day-details-modal {
+    padding: 24px;
+    height: 100%;
+}
+
+.day-details-modal h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+
+.day-details-section {
+    margin-bottom: 24px;
+}
+
+.day-details-modal h3 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.tasks-list,
+.reminders-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.task-item-modal,
+.reminder-item-modal {
+    background-color: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 16px;
+    color: var(--text-tertiary);
+}
+
+.line-through{
+    text-decoration: line-through;
+    color: var(--text-secondary);
+    background-color: var(--background-secondary);
+}

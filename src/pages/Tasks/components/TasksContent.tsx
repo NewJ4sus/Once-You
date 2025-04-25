@@ -313,7 +313,7 @@ const TasksContent: React.FC = () => {
   );
 
   if (loading) {
-    return <div className="loading">{t('task.loading')}</div>;
+    return <main className="ml-600"><div className="no_note_content"><p>{t('task.loading')}</p></div></main>
   }
 
   return (

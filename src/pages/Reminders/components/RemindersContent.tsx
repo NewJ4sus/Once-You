@@ -24,6 +24,7 @@ interface Reminder {
   reminderDate: Date | null;
   repeat: boolean;
   repeatInterval?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  notificationShown?: boolean;
 }
 
 const RemindersContent: React.FC = () => {
@@ -61,16 +62,11 @@ const RemindersContent: React.FC = () => {
           completed: data.completed || false,
           reminderDate: data.reminderDate?.toDate() || null,
           repeat: data.repeat || false,
-          repeatInterval: data.repeatInterval || 'daily'
+          repeatInterval: data.repeatInterval || 'daily',
+          notificationShown: data.notificationShown || false
         });
       });
-      
-      // Sort reminders by reminder date (closest first)
-      remindersData.sort((a, b) => {
-        if (!a.reminderDate || !b.reminderDate) return 0;
-        return a.reminderDate.getTime() - b.reminderDate.getTime();
-      });
-      
+
       setReminders(remindersData);
       setLoading(false);
     });
@@ -84,7 +80,6 @@ const RemindersContent: React.FC = () => {
     try {
       const userId = auth.currentUser.uid;
       const currentDate = new Date();
-      // Добавляем 3 часа к текущему времени
       currentDate.setHours(currentDate.getHours() + 3);
       
       await addDoc(collection(db, 'reminders', userId, 'userReminders'), {
@@ -94,7 +89,8 @@ const RemindersContent: React.FC = () => {
         reminderDate: Timestamp.fromDate(currentDate),
         repeat: false,
         repeatInterval: 'daily',
-        createdAt: Timestamp.now()
+        createdAt: Timestamp.now(),
+        notificationShown: false
       });
       
       setReminderTitle('');
@@ -182,7 +178,8 @@ const RemindersContent: React.FC = () => {
         text: editText,
         reminderDate: reminderDateObj,
         repeat: editRepeat,
-        repeatInterval: editRepeatInterval
+        repeatInterval: editRepeatInterval,
+        notificationShown: false // Сбрасываем флаг при любом изменении времени
       };
       
       await updateDoc(reminderRef, updateData);
@@ -238,7 +235,7 @@ const RemindersContent: React.FC = () => {
   const completedReminders = reminders.filter(reminder => reminder.completed);
 
   if (loading) {
-    return <div className="loading">{t('reminders.loading')}</div>;
+    return <main className="ml-600"><div className="no_note_content"><p>{t('reminders.loading')}</p></div></main>
   }
 
   return (

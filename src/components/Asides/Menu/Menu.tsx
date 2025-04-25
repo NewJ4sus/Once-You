@@ -12,7 +12,7 @@ interface MenuProps {
 }
 
 const Menu: React.FC<MenuProps> = ({ namePage }) => {
-  const { isMenuOpen, menuRef } = useAppContext();
+  const { isMenuOpen, menuRef, closeMenu } = useAppContext();
   const [counts, setCounts] = useState({
     tasks: 0,
     notes: 0,
@@ -57,39 +57,43 @@ const Menu: React.FC<MenuProps> = ({ namePage }) => {
   
   const menuClassName = `sidebar-menu ${isMenuOpen ? 'active' : ''}`;
 
+//   const handleMenuItemClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleMenuItemClick = () => {
+    closeMenu();
+  };
+
   return (
     <aside className={menuClassName} ref={menuRef}>
         <div className="sidebar-menu-header">
             <ul className="sidebar-menu-list">
-                {/* <li className={`sidebar-menu-item ${namePage === "Home" ? "active" : ""}`}> */}
                 <li className={`sidebar-menu-item`} style={{opacity: 0.5, pointerEvents: 'none', backgroundColor: 'var(--background-tertiary)', cursor: 'not-allowed'}}>
-                    <Link to="/">
+                    <Link to="/" onClick={handleMenuItemClick}>
                         <SVG name="home"/>
                         <span>{t('menu.home')}</span>
                     </Link>
                 </li>
                 <li className={`sidebar-menu-item ${namePage === "Tasks" ? "active" : ""}`}>
-                    <Link to="/tasks">
+                    <Link to="/tasks" onClick={handleMenuItemClick}>
                         <SVG name="task"/>
                         <span>{t('menu.tasks')}</span>
                         {counts.tasks > 0 && <span className="badge">{counts.tasks}</span>}
                     </Link>
                 </li>
                 <li className={`sidebar-menu-item ${namePage === "Notes" ? "active" : ""}`}>
-                    <Link to="/notes">
+                    <Link to="/notes" onClick={handleMenuItemClick}>
                         <SVG name="note"/>
                         <span>{t('menu.notes')}</span>
                         {counts.notes > 0 && <span className="badge">{counts.notes}</span>}
                     </Link>
                 </li>
                 <li className={`sidebar-menu-item ${namePage === "Calendar" ? "active" : ""}`}>
-                    <Link to="/calendar">
+                    <Link to="/calendar" onClick={handleMenuItemClick}>
                         <SVG name="calendar"/>
                         <span>{t('menu.calendar')}</span>
                     </Link>
                 </li>
                 <li className={`sidebar-menu-item ${namePage === "Reminders" ? "active" : ""}`}>
-                    <Link to="/reminders">
+                    <Link to="/reminders" onClick={handleMenuItemClick}>
                         <SVG name="clock"/>
                         <span>{t('menu.reminders')}</span>
                         {counts.reminders > 0 && <span className="badge">{counts.reminders}</span>}
@@ -100,13 +104,13 @@ const Menu: React.FC<MenuProps> = ({ namePage }) => {
         <div className="sidebar-menu-footer">
             <ul className="sidebar-menu-list">
                 <li className={`sidebar-menu-item ${namePage === "Settings" ? "active" : ""}`}>
-                    <Link to="/settings">
+                    <Link to="/settings" onClick={handleMenuItemClick}>
                         <SVG name="settings"/>
                         <span>{t('menu.settings')}</span>
                     </Link>
                 </li>
                 <li className={`sidebar-menu-item mobile-hidden${namePage === "Information" ? "active" : ""}`}>
-                    <Link to="/information">
+                    <Link to="/information" onClick={handleMenuItemClick}>
                         <SVG name="info"/>
                         <span>{t('menu.information')}</span>
                     </Link>

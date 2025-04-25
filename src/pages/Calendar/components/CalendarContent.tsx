@@ -9,6 +9,8 @@ import {
 import { db, auth } from '../../../config/firebase';
 import SVG from '../../../components/SVG/SVG';
 import { useTranslation } from '@/i18n/TranslationContext';
+import Modal from '@/components/Modals/MediumModal/Modal';
+
 interface Task {
   id: string;
   createdAt: Date;
@@ -40,8 +42,9 @@ const CalendarContent: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDayEvents, setSelectedDayEvents] = useState<DayEvents | null>(null);
   const { t } = useTranslation();
-
 
   const weekdays = [t('calendar.monday'), t('calendar.tuesday'), 
                   t('calendar.wednesday'), t('calendar.thursday'), 
@@ -53,8 +56,6 @@ const CalendarContent: React.FC = () => {
                   t('calendar.july'), t('calendar.august'), 
                   t('calendar.september'), t('calendar.october'), 
                   t('calendar.november'), t('calendar.december')];
-
-
 
   // Fetch tasks and reminders from Firebase
   useEffect(() => {
@@ -206,6 +207,22 @@ const CalendarContent: React.FC = () => {
     setCurrentDate(new Date());
   };
 
+  // Function to handle day click
+  const handleDayClick = (date: Date) => {
+    setSelectedDate(date);
+    const events = getDayEvents(date);
+    setSelectedDayEvents(events);
+    const modal = document.getElementById('DayDetailsModal');
+    if (modal) {
+      modal.classList.add('active');
+    }
+  };
+
+  // Function to format date
+  const formatDate = (date: Date): string => {
+    return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+  };
+
   // Рендер дней календаря
   const renderCalendarDays = (): React.ReactElement[] => {
     const year = currentDate.getFullYear();
@@ -239,6 +256,8 @@ const CalendarContent: React.FC = () => {
         <div 
           key={`current-${day}`} 
           className={`calendar-day ${isToday ? 'today' : ''}`}
+          onClick={() => handleDayClick(date)}
+          style={{ cursor: 'pointer' }}
         >
           <div className="day-number">{day}</div>
           <div className="day-indicators">
@@ -300,7 +319,7 @@ const CalendarContent: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="loading">Loading calendar data...</div>;
+    return <main className="ml-600"><div className="no_note_content"><p>{t('calendar.loading')}</p></div></main>;
   }
 
   return (
@@ -354,6 +373,74 @@ const CalendarContent: React.FC = () => {
           {renderCalendarDays()}
         </div>
       </div>
+
+      {/* Day Details Modal */}
+      <Modal id="DayDetailsModal">
+        <div className="day-details-modal">
+          {selectedDate && (
+            <>
+              <h2 className="">
+                {formatDate(selectedDate)}
+              </h2>
+              
+              <div className="day-details-section">
+                <h3 className="">{t('calendar.tasks')}</h3>
+                {selectedDayEvents?.tasks && selectedDayEvents.tasks.length > 0 ? (
+                  <div className="tasks-list">
+                    {selectedDayEvents.tasks.map(task => (
+                      <div key={task.id} className="task-item-modal">
+                        <span className={`task-title ${task.completed ? 'line-through' : ''}`}>
+                          {task.title}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="empty-state">
+                    <p>{t('calendar.noTasks')}</p>
+                    <button 
+                      className="modal-edit-task-button mt-2"
+                      onClick={() => window.location.href = '/tasks'}
+                    >
+                      {t('calendar.planTask')}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="day-details-section">
+                <h3 className="">{t('calendar.reminders')}</h3>
+                {selectedDayEvents?.reminders && selectedDayEvents.reminders.length > 0 ? (
+                  <div className="reminders-list">
+                    {selectedDayEvents.reminders.map(reminder => (
+                      <div key={reminder.id} className="reminder-item-modal">
+                        <span className={`reminder-title ${reminder.completed ? 'line-through' : ''}`}>
+                          {reminder.title}
+                        </span>
+                        {reminder.text && (
+                          <p className="">
+                            {reminder.text}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="empty-state">
+                    <p>{t('calendar.noReminders')}</p>
+                    <button 
+                      className="modal-edit-task-button mt-2"
+                      onClick={() => window.location.href = '/reminders'}
+                    >
+                      {t('calendar.planReminder')}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      </Modal>
     </main>
   );
 };

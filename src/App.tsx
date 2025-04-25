@@ -1,12 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 import { UserSettingsProvider } from './context/UserSettingsContext';
+import { NotificationProvider } from '@/context/NotificationContext';
 import { NoteTypesProvider } from './context/NoteTypesContext';
 import { auth } from '@/config/firebase'
 import { useEffect, useState } from 'react'
 import { useTheme } from '@/hooks/useTheme';
 import '@/assets/css/themes.css';
 import { TranslationProvider } from '@/i18n/TranslationContext';
+import ReminderNotificationHandler from '@/components/ReminderNotificationHandler/ReminderNotificationHandler';
 
 import Home from './pages/Home/HomePage';
 import Tasks from './pages/Tasks/TasksPage';
@@ -45,15 +47,29 @@ function App() {
   }, [])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <main>
+    <div className="no_note_content">
+      <div className="note-spinner">
+        <div className="note-spinner__paper">
+          <div className="note-spinner__lines">
+            <div className="note-spinner__line"></div>
+            <div className="note-spinner__line"></div>
+            <div className="note-spinner__line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
   }
 
   return (
     <AppProvider>
       <UserSettingsProvider>
-        <TranslationProvider>
-          <NoteTypesProvider>
-            <ThemeWrapper>
+        <NotificationProvider>
+          <ReminderNotificationHandler />
+          <TranslationProvider>
+            <NoteTypesProvider>
+              <ThemeWrapper>
               <Router>
                 <Routes>
                   {/* Public routes */}
@@ -73,8 +89,9 @@ function App() {
                 </Routes>
               </Router>
             </ThemeWrapper>
-          </NoteTypesProvider>
-        </TranslationProvider>
+            </NoteTypesProvider>
+          </TranslationProvider>
+        </NotificationProvider>
       </UserSettingsProvider>
     </AppProvider>
   );
