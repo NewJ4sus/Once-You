@@ -25,6 +25,7 @@
     "@editorjs/table": "^2.4.4",
     "@types/react-router-dom": "^5.3.3",
     "chart.js": "^4.4.9",
+    "core-js": "^3.41.0",
     "firebase": "^11.6.0",
     "framer-motion": "^12.9.0",
     "react": "^19.0.0",
