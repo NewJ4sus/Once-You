@@ -208,3 +208,7 @@
   .ce-block--selected .ce-block__content{
     background-color: var(--background-tertiary);
   }
+
+  .cdx-input{
+    border-radius: 10px;
+  }
