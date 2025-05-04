@@ -109,7 +109,7 @@ const Menu: React.FC<MenuProps> = ({ namePage }) => {
                         <span>{t('menu.settings')}</span>
                     </Link>
                 </li>
-                <li className={`sidebar-menu-item mobile-hidden${namePage === "Information" ? "active" : ""}`}>
+                <li className={`sidebar-menu-item mobile-hidden ${namePage === "Information" ? "active" : ""}`}>
                     <Link to="/information" onClick={handleMenuItemClick}>
                         <SVG name="info"/>
                         <span>{t('menu.information')}</span>

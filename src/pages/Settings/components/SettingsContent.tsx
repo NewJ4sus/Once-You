@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import { Dropdown, DropdownProvider } from '@/components/Dropdown/Dropdown';
-import { Link } from 'react-router-dom';
 import { useUserSettings } from '@/context/UserSettingsContext';
 import { useNoteTypes } from '@/context/NoteTypesContext';
 import { useTranslation } from '@/i18n/TranslationContext';
+import { 
+  deleteAllNotes, 
+  deleteAllTasks, 
+  deleteAllReminders, 
+  deleteAllUserData 
+} from '../../../config/userData';
+import { notify } from '@/components/Notifications/Notification';
 
 interface UserSettings {
   firstName: string;
@@ -20,6 +26,7 @@ const SettingsContent: React.FC = () => {
   const { noteTypes, addNoteType, removeNoteType } = useNoteTypes();
   const { t } = useTranslation();
   const [newNoteType, setNewNoteType] = useState('');
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   const handleSettingChange = async (key: keyof UserSettings, value: UserSettings[keyof UserSettings]) => {
     await updateSetting(key, value);
@@ -34,6 +41,31 @@ const SettingsContent: React.FC = () => {
       await addNoteType(newNoteType.trim());
       setNewNoteType('');
     }
+  };
+
+  const handleDeleteNotes = async () => {
+    setDeleting('notes');
+    await deleteAllNotes();
+    setDeleting(null);
+    notify.success('Все заметки удалены!');
+  };
+  const handleDeleteTasks = async () => {
+    setDeleting('tasks');
+    await deleteAllTasks();
+    setDeleting(null);
+    notify.success('Все задачи удалены!');
+  };
+  const handleDeleteReminders = async () => {
+    setDeleting('reminders');
+    await deleteAllReminders();
+    setDeleting(null);
+    notify.success('Все напоминания удалены!');
+  };
+  const handleDeleteAll = async () => {
+    setDeleting('all');
+    await deleteAllUserData();
+    setDeleting(null);
+    notify.success('Все данные пользователя удалены!');
   };
 
   return (
@@ -60,7 +92,7 @@ const SettingsContent: React.FC = () => {
             </div>
           </div>
           <div className="settings-section">
-            <h2 className="settings-section-title">{t('settings.appearance')}</h2>
+            <h2 className="settings-section-title">{t('settings.basic')}</h2>
 
             <div className="settings-group">
               <label className="settings-label">{t('settings.themeColor')}</label>
@@ -87,51 +119,6 @@ const SettingsContent: React.FC = () => {
                 </Dropdown>
             </div>
 
-            {/* <div className="settings-group">
-                <label className="settings-label">{t('settings.themeType')}</label>
-                
-                  <Dropdown 
-                      id="theme-type"
-                      buttonContent={<span>{t(`settings.${userSettings?.themeType}`)}</span>}
-                      buttonClassName="min-w-150"
-                      key={userSettings?.themeType}
-                  >
-                      <ul className="dropdown-menu-list">
-                          <li className="dropdown-menu-item">
-                              <a href="#" onClick={() => handleSettingChange('themeType', 'standard')}>{t('settings.standard')}</a>
-                          </li>
-                          <li className="dropdown-menu-item">
-                              <a href="#" onClick={() => handleSettingChange('themeType', 'glass')}>{t('settings.glass')}</a>
-                          </li>
-                      </ul>
-                  </Dropdown>
-            </div> */}
-
-            {/* <div className="settings-group">
-              <label className="settings-label">{t('settings.background')}</label>
-                <Dropdown
-                  id="background"
-                  buttonContent={<span>{t(`settings.${userSettings?.background}`)}</span>}
-                  buttonClassName="min-w-150"
-                  key={userSettings?.background}
-                >
-                  <ul className="dropdown-menu-list">
-                    <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('background', 'solid')}>{t('settings.solid')}</a>
-                    </li>
-                    <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('background', 'noise')}>{t('settings.noise')}</a>
-                    </li>
-                    <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('background', 'gradient')}>{t('settings.gradient')}</a>
-                    </li>
-                  </ul>
-                </Dropdown>
-            </div> */}
-          </div>
-
-          <div className="settings-section">
-            <h2 className="settings-section-title">{t('settings.preferences')}</h2>
             <div className="settings-group">
               <label className="settings-label">{t('settings.language')}</label>
 
@@ -160,18 +147,6 @@ const SettingsContent: React.FC = () => {
                   type="checkbox"
                   checked={userSettings?.hideNoteText}
                   onChange={(e) => handleSettingChange('hideNoteText', e.target.checked)}
-                />
-                <span className="toggle-slider"></span>
-              </label>
-            </div>
-
-            <div className="settings-group">
-              <label className="settings-label">{t('settings.notifications')}</label>
-              <label className="toggle-switch">
-                <input
-                  type="checkbox"
-                  checked={userSettings?.notifications}
-                  onChange={(e) => handleSettingChange('notifications', e.target.checked)}
                 />
                 <span className="toggle-slider"></span>
               </label>
@@ -227,22 +202,51 @@ const SettingsContent: React.FC = () => {
           </div>
 
           <div className="settings-section">
-            <h2 className="settings-section-title">{t('settings.project')}</h2>
-            <div className="settings-social-buttons">
-              <Link to="/settings/social/github" className="settings-social-button">
-                <i className="fa-brands fa-github"></i>
-              </Link>
-              <Link to="/settings/social/gitlab" className="settings-social-button">
-                <i className="fa-brands fa-gitlab"></i>
-              </Link>
-              <Link to="/settings/social/zip" className="settings-social-button">
-                <i className="fa-brands fa-file"></i>
-              </Link>
-              <Link to="/settings/social/yandex_disk" className="settings-social-button">
-                <i className="fa-brands fa-yandex"></i>
-              </Link>
+            <h2 className="settings-section-title">Удаление данных</h2>
+            <div className="settings-group" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div className="input_button_group w-100">
+                <span>Заметки</span>
+                  <button 
+                    className="settings-delete-button"
+                    onClick={handleDeleteNotes}
+                    disabled={deleting !== null}
+                >
+                  {deleting === 'notes' ? 'Удаление...' : 'Удалить'}
+                </button>
+              </div>
+              <div className="input_button_group w-100">
+                <span>Задачи</span>
+                <button 
+                  className="settings-delete-button"
+                  onClick={handleDeleteTasks}
+                disabled={deleting !== null}
+              >
+                  {deleting === 'tasks' ? 'Удаление...' : 'Удалить'}
+                </button>
+              </div>
+              <div className="input_button_group w-100">
+                <span>Напоминания</span>
+                <button 
+                  className="settings-delete-button"
+                  onClick={handleDeleteReminders}
+                  disabled={deleting !== null}
+                >
+                  {deleting === 'reminders' ? 'Удаление...' : 'Удалить'}
+                </button>
+              </div>
+              <div className="input_button_group w-100">
+                <span>Всё</span>
+                <button 
+                  className="settings-delete-button"
+                onClick={handleDeleteAll}
+                disabled={deleting !== null}
+              >
+                  {deleting === 'all' ? 'Удаление...' : 'Удалить всё'}
+                </button>
+              </div>
             </div>
           </div>
+
         </div>
       </main>
     </DropdownProvider>

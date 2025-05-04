@@ -121,6 +121,8 @@ export default {
     standard: 'Standard',
     glass: 'Glass',
     solid: 'Solid',
+
+    basic: 'Basic',
   },
   information: {
     aboutProject: 'About Project',

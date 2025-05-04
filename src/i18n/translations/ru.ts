@@ -123,6 +123,8 @@ export default {
     solid: 'Сплошной',
     noise: 'Шум',
     gradient: 'Градиент',
+
+    basic: 'Основные',
   },
   information: {
     aboutProject: 'О проекте',

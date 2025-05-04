@@ -8,11 +8,9 @@ interface UserSettings {
   firstName: string;
   lastName: string;
   themeColor: 'light' | 'dark';
-  themeType: 'standard' | 'glass';
   background: 'solid' | 'noise' | 'gradient';
   language: string;
   hideNoteText: boolean;
-  notifications: boolean;
   typeUser: 'default';
   group: 'admin' | 'moderator' | 'user';
 }
@@ -43,12 +41,10 @@ export const UserSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
             const defaultSettings: UserSettings = {
               firstName: '',
               lastName: '',
-              themeColor: 'light',
-              themeType: 'standard',
+              themeColor: 'dark',
               background: 'solid',
               language: 'ru',
               hideNoteText: false,
-              notifications: true,
               typeUser: 'default',
               group: 'user'
             };
@@ -87,11 +83,9 @@ export const UserSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
       if (userSettings.firstName !== newSettings.firstName) changes.firstName = newSettings.firstName;
       if (userSettings.lastName !== newSettings.lastName) changes.lastName = newSettings.lastName;
       if (userSettings.themeColor !== newSettings.themeColor) changes.themeColor = newSettings.themeColor;
-      if (userSettings.themeType !== newSettings.themeType) changes.themeType = newSettings.themeType;
       if (userSettings.background !== newSettings.background) changes.background = newSettings.background;
       if (userSettings.language !== newSettings.language) changes.language = newSettings.language;
       if (userSettings.hideNoteText !== newSettings.hideNoteText) changes.hideNoteText = newSettings.hideNoteText;
-      if (userSettings.notifications !== newSettings.notifications) changes.notifications = newSettings.notifications;
       if (userSettings.group !== newSettings.group) changes.group = newSettings.group;
     }
     

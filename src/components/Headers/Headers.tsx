@@ -50,7 +50,7 @@ const Headers: React.FC<HeadersProps> = ({ namePage }) => {
   return (
     <header>
       <div className="header-left">
-        <span className="bold">Once You <kbd className='kdb-version'>v.1.0</kbd></span>
+        <span className="bold">Once You <kbd className='kdb-version'>v.1.0.0</kbd></span>
         <span className="header-left__namePage">
           {namePage}
         </span>

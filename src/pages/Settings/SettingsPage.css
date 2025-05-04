@@ -44,6 +44,7 @@
 
 .input_button_group{
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 10px;
     border: none;
@@ -52,6 +53,22 @@
 .input_button_group .settings-button{
     padding: 0px 20px;
     height: 60px;
+}
+
+.settings-delete-button{
+    background-color: transparent;
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.settings-delete-button:hover{
+    background-color: var(--danger-color);
+    color: var(--background-primary);
 }
 
 .settings-label {
