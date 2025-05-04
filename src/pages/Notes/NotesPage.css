@@ -112,52 +112,99 @@
     font-weight: 400;
     color:  var(--text-primary);
   }
+
+  .tc-wrap{
+    --color-background: var(--background-secondary) !important;
+    --color-text-secondary: var(--text-secondary) !important;
+    --color-border: var(--border-color) !important;
+    --cell-size: 34px ;
+    --toolbox-icon-size: 18px ;
+    --toolbox-padding: 6px ;
+    --toolbox-aiming-field-size: calc(var(--toolbox-icon-size) + var(--toolbox-padding)*2);
+  }
   
+  .tc-toolbox {
+    --toolbox-padding: 6px;
+    --popover-margin: 30px;
+    --toggler-click-zone-size: 30px;
+    --toggler-dots-color: var(--text-primary);
+    --toggler-dots-color-hovered: var(--text-primary);
+    cursor: pointer;
+  }
+  
+  .tc-popover {
+    --color-border: var(--border-color) !important;
+    --color-background: var(--background-secondary) !important;
+    --color-background-hover: var(--background-primary) !important;
+    --color-background-confirm: var(--danger-color) !important;
+    --color-background-confirm-hover: var(--danger-color) !important;
+    --color-text-confirm: var(--background-primary) !important;
+    background: var(--color-background) !important;
+    border: 1px solid var(--color-border) !important;
+    box-shadow: 0 3px 15px -3px var(--background-primary) !important;
+  }
+
+  .ce-code__textarea {
+    color: var(--text-primary) !important;
+    background: var(--background-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+  }
+
+  .cdx-input {
+    border: 1px solid var(--border-color) !important;
+    -webkit-box-shadow: inset 0 1px 2px 0 var(--background-primary) !important;
+    box-shadow: none !important;
+  }
+
+  .cdx-list {
+    --checkbox-background: var(--background-secondary) !important;
+    --color-border: var(--border-color) !important;
+    --color-bg-checked: var(--accent-color) !important;
+    --color-bg-checked-hover: var(--accent-color) !important;
+    --color-tick: var(--background-primary) !important;
+  }
+
+  .ce-popover {
+    --color-border: var(--border-color) !important;
+    --color-shadow: var(--shadow-color) !important;
+    --color-background: var(--background-secondary) !important;
+    --color-text-primary: var(--text-primary) !important;
+    --color-text-secondary: var(--text-secondary) !important;
+    --color-border-icon: var(--border-color) !important;
+    --color-border-icon-disabled: var(--border-color) !important;
+    --color-text-icon-active: var(--accent-color) !important;
+    --color-background-icon-active: var(--background-primary) !important;
+    --color-background-item-focus: var(--background-primary) !important;
+    --color-shadow-item-focus: var(--shadow-color) !important;
+    --color-background-item-hover: var(--background-primary) !important;
+    --color-background-item-confirm: var(--danger-color) !important;
+    --color-background-item-confirm-hover: var(--danger-color) !important;
+  }
+
+  .cdx-search-field {
+    background: var(--background-primary) !important;
+    border: 1px solid var(--border-color) !important;
+  }
+
+  .ce-toolbar__plus:hover{
+    background: var(--background-secondary) !important;
+  }
+
+  .ce-toolbar__settings-btn:hover{
+    background: var(--background-secondary) !important;
+  }
+
+  :root {
+    --selectionColor: var(--background-secondary) !important;
+    --inlineSelectionColor: var(--background-secondary) !important;
+    --bg-light: var(--background-primary) !important;
+    --grayText: var(--text-secondary) !important;
+    --color-dark: var(--background-primary) !important;
+    --color-active-icon: var(--accent-color) !important;
+    --color-gray-border: var(--border-color) !important;
+    --color-line-gray: var(--border-color) !important;
+  }
 
   .ce-block--selected .ce-block__content{
-    background-color: var(--background-secondary);
+    background-color: var(--background-tertiary);
   }
-
-  .ce-popover__container{
-    background-color: var(--background-secondary);
-    border: 1px solid var(--border-color);
-  }
-
-  .ce-popover--opened > .ce-popover__container{
-    border: 1px solid var(--border-color);
-  }
-
-  .ce-popover__search{
-    background-color: var(--background-primary);
-    border: 1px solid var(--border-color);
-  }
-
-  .cdx-search-field__input {
-    color: var(--text-primary);
-  }
-
-  .ce-popover-item{
-    color: var(--text-primary);
-  }
-
-  .ce-popover-item:hover{
-    background-color: var(--background-primary);
-  }
-
-  .ce-popover-item:hover:not(.ce-popover-item--no-hover){
-    background-color: var(--color-background-item);
-  }
-
-  .ce-toolbar__plus{
-    color: var(--text-primary);
-  }
-  .ce-toolbar__plus:hover{
-    background-color: var(--background-secondary);
-  }
-  .ce-toolbar__settings-btn{
-    color: var(--text-primary);
-  }
-  .ce-toolbar__settings-btn:hover{
-    background-color: var(--background-secondary);
-  }
-  

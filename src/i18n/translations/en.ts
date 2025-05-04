@@ -90,6 +90,7 @@ export default {
     weekly: 'Every week',
     monthly: 'Every month',
     yearly: 'Every year',
+    close: 'Close',
   },
   settings: {
     account: 'Account',

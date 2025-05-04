@@ -185,7 +185,7 @@
     outline: 2px solid var(--border-color);
     aspect-ratio: 1;
     background: var(--background-primary);
-    padding: 8px;
+    padding: 10px;
     position: relative;
     cursor: pointer;
 }

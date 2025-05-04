@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import './HomePage.css';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db, auth } from '@/config/firebase';
 
 interface QuickStatsProps {
   totalTasks: number;
@@ -10,13 +11,75 @@ interface QuickStatsProps {
 }
 
 const HomeContent: React.FC = () => {
-  // This would be replaced with real data from your state management
-  const mockStats: QuickStatsProps = {
-    totalTasks: 5,
-    completedTasks: 2,
-    upcomingReminders: 3,
-    todayNotes: 1,
-  };
+  const [stats, setStats] = useState<QuickStatsProps>({
+    totalTasks: 0,
+    completedTasks: 0,
+    upcomingReminders: 0,
+    todayNotes: 0,
+  });
+
+  useEffect(() => {
+    if (!auth.currentUser) return;
+
+    const userId = auth.currentUser.uid;
+
+    // --- TASKS ---
+    const tasksRef = collection(db, 'tasks', userId, 'userTasks');
+    const unsubscribeTasks = onSnapshot(tasksRef, (querySnapshot) => {
+      let totalTasks = 0;
+      let completedTasks = 0;
+      querySnapshot.forEach((doc) => {
+        totalTasks += 1;
+        if (doc.data().completed) completedTasks += 1;
+      });
+      setStats((prev) => ({ ...prev, totalTasks, completedTasks }));
+    });
+
+    // --- REMINDERS ---
+    const remindersRef = collection(db, 'reminders', userId, 'userReminders');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    const unsubscribeReminders = onSnapshot(remindersRef, (querySnapshot) => {
+      let upcomingReminders = 0;
+      querySnapshot.forEach((doc) => {
+        const reminderDate = doc.data().reminderDate?.toDate?.();
+        if (
+          reminderDate &&
+          reminderDate >= today &&
+          reminderDate < tomorrow
+        ) {
+          upcomingReminders += 1;
+        }
+      });
+      setStats((prev) => ({ ...prev, upcomingReminders }));
+    });
+
+    // --- NOTES ---
+    const notesRef = collection(db, 'notes', userId, 'userNotes');
+    const unsubscribeNotes = onSnapshot(notesRef, (querySnapshot) => {
+      let todayNotes = 0;
+      querySnapshot.forEach((doc) => {
+        const createdAt = doc.data().createdAt?.toDate?.();
+        if (
+          createdAt &&
+          createdAt >= today &&
+          createdAt < tomorrow
+        ) {
+          todayNotes += 1;
+        }
+      });
+      setStats((prev) => ({ ...prev, todayNotes }));
+    });
+
+    return () => {
+      unsubscribeTasks();
+      unsubscribeReminders();
+      unsubscribeNotes();
+    };
+  }, []);
 
   // Моковые данные для графика (замените на реальные данные)
   const chartData = [
@@ -33,37 +96,25 @@ const HomeContent: React.FC = () => {
     <main>
       <div className='task-container'>
 
-      
-      {/* Welcome Section */}
-      {/* <section className="welcome-section">
-        <h1>Добро пожаловать!</h1>
-        <p className="today-date">{new Date().toLocaleDateString('ru-RU', { 
-          weekday: 'long', 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
-        })}</p>
-      </section> */}
-
       {/* Quick Stats Grid */}
       <section className="quick-stats-grid">
         <div className="stat-card">
           <h3>Задачи</h3>
-          <p>{mockStats.completedTasks} из {mockStats.totalTasks} выполнено</p>
+          <p>{stats.completedTasks} из {stats.totalTasks} выполнено</p>
           <div className="progress-bar">
             <div 
               className="progress" 
-              style={{ width: `${(mockStats.completedTasks / mockStats.totalTasks) * 100}%` }}
+              style={{ width: `${(stats.completedTasks / stats.totalTasks) * 100}%` }}
             />
           </div>
         </div>
         <div className="stat-card">
           <h3>Напоминания</h3>
-          <p>{mockStats.upcomingReminders} на сегодня</p>
+          <p>{stats.upcomingReminders} на сегодня</p>
         </div>
         <div className="stat-card">
           <h3>Заметки</h3>
-          <p>{mockStats.todayNotes} новых</p>
+          <p>{stats.todayNotes} новых</p>
         </div>
       </section>
 

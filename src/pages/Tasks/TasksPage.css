@@ -96,16 +96,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 15px;
+  padding: 20px;
   background: var(--background-secondary);
-  border-radius: 6px;
+  border-radius: 15px;
   transition: all 0.3s ease;
   border-left: 3px solid transparent;
 }
 
 /* Task type styles */
 .task-item.standard {
-  border-left-color: var(--default-color);
+  border-left-color: var(--background-secondary);
 }
 
 .task-item.medium {
@@ -117,8 +117,7 @@
 }
 
 .task-item.completed {
-  background: var(--background-active-day);
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 .task-item.completed .task-text {
@@ -127,10 +126,56 @@
 }
 
 .task-checkbox {
-  margin-right: 15px;
-  width: 20px;
-  height: 20px;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+/* Обертка для позиционирования */
+.custom-checkbox-wrapper {
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+/* Сам кастомный чекбокс */
+.custom-checkbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--background-tertiary);
+  border-radius: 6px;
+  background: var(--background-primary);
+  transition: border-color 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Галочка */
+.custom-checkbox-wrapper.checked .custom-checkbox {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  position: relative;
+}
+
+.custom-checkbox-wrapper.checked .custom-checkbox::after {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 5px;
+  border-left: 2.5px solid var(--text-primary);
+  border-bottom: 2.5px solid var(--text-primary);
+  transform: rotate(-45deg);
+  position: absolute;
+  left: 6px;
+  top: 7px;
 }
 
 .task-text {
@@ -264,4 +309,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.task-content-title span{
+  padding: 0px 10px;
+  color: var(--text-primary);
+  font-size: 16px;
 }

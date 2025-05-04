@@ -1,0 +1,177 @@
+.home-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .welcome-section {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .welcome-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+  
+  .today-date {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+  }
+  
+  .quick-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .stat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--background-secondary);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .stat-card h3 {
+    color: var(--text-primary);
+    margin: 0;
+  }
+  
+  .stat-card p {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+  }
+  
+  .progress-bar {
+    height: 8px;
+    margin-top: .5rem;
+    background: var(--background-primary);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .progress {
+    height: 100%;
+    background: var(--accent-color);
+    transition: width 0.3s ease;
+  }
+  
+  .quick-actions {
+    margin-bottom: 2rem;
+  }
+  
+  .quick-actions h2 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .action-button {
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--background-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .action-button:hover {
+    background: var(--background-tertiary);
+    transform: translateY(-2px);
+  }
+  
+  .mini-calendar {
+    background: var(--background-secondary);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mini-calendar h2 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .calendar-container {
+    min-height: 300px;
+  }
+
+  .stats-chart {
+    background: var(--background-secondary);
+    border-radius: 16px;
+    padding: 2rem 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    margin-top: 2rem;
+  }
+  
+  .stats-chart h2 {
+    padding: 0 2rem;
+    margin: 0;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+  }
+  
+  .chart-container {
+    width: 100%;
+    height: 300px;
+    margin: 1rem 0;
+  }
+  
+  .chart-tabs {
+    padding: 0 2rem;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .chart-tab {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+  }
+  
+  .chart-tab.active {
+    background: var(--background-tertiary);
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  
+  .chart-tab:hover {
+    background: var(--background-tertiary);
+  }
+
+  .custom-tooltip {
+    background: var(--background-tertiary) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
+  }
+  
+  .custom-tooltip .recharts-tooltip-label {
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  
+  .custom-tooltip .recharts-tooltip-item {
+    color: var(--text-primary) !important;
+    padding: 4px 0;
+    font-weight: 500;
+  }

@@ -63,7 +63,7 @@ const RemindersContent: React.FC = () => {
           reminderDate: data.reminderDate?.toDate() || null,
           repeat: data.repeat || false,
           repeatInterval: data.repeatInterval || 'daily',
-          notificationShown: data.notificationShown || false
+          notificationShown: data.notificationShown || false,
         });
       });
 
@@ -90,7 +90,7 @@ const RemindersContent: React.FC = () => {
         repeat: false,
         repeatInterval: 'daily',
         createdAt: Timestamp.now(),
-        notificationShown: false
+        notificationShown: false,
       });
       
       setReminderTitle('');
@@ -179,7 +179,7 @@ const RemindersContent: React.FC = () => {
         reminderDate: reminderDateObj,
         repeat: editRepeat,
         repeatInterval: editRepeatInterval,
-        notificationShown: false // Сбрасываем флаг при любом изменении времени
+        notificationShown: false,
       };
       
       await updateDoc(reminderRef, updateData);
@@ -197,12 +197,19 @@ const RemindersContent: React.FC = () => {
 
   const renderReminderItem = (reminder: Reminder) => (
     <div key={reminder.id} className={`reminder-item ${reminder.completed ? 'completed' : ''}`}>
-      <input 
-        type="checkbox" 
-        className="reminder-checkbox"
-        checked={reminder.completed}
-        onChange={() => handleReminderToggle(reminder.id)}
-      />
+      <div
+        className={`custom-checkbox-wrapper ${reminder.completed ? 'checked' : ''}`}
+        onClick={() => handleReminderToggle(reminder.id)}
+      >
+        <input
+          type="checkbox"
+          className="task-checkbox"
+          checked={reminder.completed}
+          readOnly
+          tabIndex={-1}
+        />
+        <span className="custom-checkbox"></span>
+      </div>
       <div className="reminder-content">
         <div className='reminder-content-title'>
           <span className='reminder-title'>{reminder.title}</span>

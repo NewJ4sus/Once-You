@@ -89,6 +89,7 @@ export default {
     weekly: 'Каждую неделю',
     monthly: 'Каждый месяц',
     yearly: 'Каждый год',
+    close: 'Закрыть',
   },
   settings: {
     account: 'Аккаунт',

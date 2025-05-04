@@ -53,6 +53,7 @@
   border-color: var(--accent-color);
   color: var(--accent-color);
 }
+
 .badge {
   position: absolute;
   top: 50%;

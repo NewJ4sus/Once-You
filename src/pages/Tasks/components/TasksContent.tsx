@@ -267,12 +267,19 @@ const TasksContent: React.FC = () => {
 
   const renderTaskItem = (task: Task) => (
     <div key={task.id} className={`task-item ${task.completed ? 'completed' : ''} ${task.type}`}>
-      <input 
-        type="checkbox" 
-        className="task-checkbox"
-        checked={task.completed}
-        onChange={() => handleTaskToggle(task.id)}
-      />
+      <div
+        className={`custom-checkbox-wrapper ${task.completed ? 'checked' : ''}`}
+        onClick={() => handleTaskToggle(task.id)}
+      >
+        <input
+          type="checkbox"
+          className="task-checkbox"
+          checked={task.completed}
+          readOnly
+          tabIndex={-1}
+        />
+        <span className="custom-checkbox"></span>
+      </div>
       <div className="task-content">
         <div className='task-content-title'>
           <span className='task-title'>{task.title}</span>

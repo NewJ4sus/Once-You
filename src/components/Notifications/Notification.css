@@ -1,0 +1,27 @@
+.sonner-toast li{
+    background-color: var(--header-rgba) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 2px solid var(--border-color) !important;
+}
+
+.sonner-toast button{
+    background: var(--text-primary) !important;
+    color: var(--background-primary) !important;
+  }
+
+.sonner-toast [data-title] {
+  color: var(--text-primary) !important; /* Цвет заголовка */
+}
+
+.sonner-toast [data-description] {
+  color: var(--text-secondary) !important; /* Цвет описания */
+}
+
+/* Для разных типов уведомлений (success, error и т.д.) */
+.sonner-toast[data-type="success"] {
+  border-color: var(--accent-color) !important; /* Зелёная обводка для success */
+}
+
+.sonner-toast[data-type="error"] {
+  border-color: var(--danger-color) !important; /* Красная обводка для error */
+}

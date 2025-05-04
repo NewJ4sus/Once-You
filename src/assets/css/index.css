@@ -1,6 +1,10 @@
 * {
   font-family: sans-serif;
 }
+::selection{
+  background-color: var(--background-tertiary) !important;
+  color: var(--text-primary) !important;
+}
 
 body {
   background-color: var(--background-primary);
@@ -14,6 +18,10 @@ main{
   min-height: calc(100vh - 70px);
   padding: 20px;
   overflow-y: auto;
+}
+
+svg {
+  color: var(--text-secondary) !important;
 }
 
 .ml-600{
