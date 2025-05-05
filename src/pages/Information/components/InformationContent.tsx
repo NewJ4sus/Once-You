@@ -34,14 +34,6 @@ const InformationContent: React.FC = () => {
         </section>
 
         <section className="settings-section">
-          <h2 className="settings-section-title">{t('information.contact')}</h2>
-          <p>{t('information.contactDescription')}</p>
-          <div className="contact-info">
-            <a href="mailto:contact@onceyou.com" className="contact-link">contact@onceyou.com</a>
-          </div>
-        </section>
-
-        <section className="settings-section">
           <h2 className="settings-section-title">{t('settings.project')}</h2>
           <div className="settings-social-buttons">
             <Link to="/settings/social/github" className="settings-social-button">

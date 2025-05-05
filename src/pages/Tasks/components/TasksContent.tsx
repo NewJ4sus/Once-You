@@ -320,7 +320,11 @@ const TasksContent: React.FC = () => {
   );
 
   if (loading) {
-    return <main className="ml-600"><div className="no_note_content"><p>{t('task.loading')}</p></div></main>
+    return <main className="ml-600">
+      <div className="no_note_content">
+        <p>{t('task.loading')}</p>
+      </div>
+      </main>
   }
 
   return (
@@ -362,7 +366,13 @@ const TasksContent: React.FC = () => {
                 {currentTasks.length > 0 ? (
                   currentTasks.map(task => renderTaskItem(task))
                 ) : (
-                  <div className="empty-state">{t('task.noTask')}</div>
+                  <div className='no_content'>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+                    </svg>
+                    <div className="empty-state">{t('task.noTask')}</div>
+                  </div>
                 )}
               </div>
             </div>
@@ -371,7 +381,13 @@ const TasksContent: React.FC = () => {
                 {completedTasks.length > 0 ? (
                   completedTasks.map(task => renderTaskItem(task))
                 ) : (
-                  <div className="empty-state">{t('task.noTask')}</div>
+                  <div className='no_content'>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+                    </svg>
+                    <div className="empty-state">{t('task.noTaskCompleted')}</div>
+                  </div>
                 )}
               </div>
             </div>

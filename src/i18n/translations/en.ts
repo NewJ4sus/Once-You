@@ -22,6 +22,7 @@ export default {
     saveTask: 'Save',
     cancelTask: 'Cancel',
     noTask: 'No current tasks',
+    noTaskCompleted: 'No completed tasks',
     loading: 'Loading tasks...',
   },
   header: {

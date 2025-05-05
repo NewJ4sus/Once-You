@@ -24,7 +24,7 @@
         var(--background-primary)
     );
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 4px;
     font-weight: 500;
     margin-bottom: 1.5rem;
     color: var(--text-primary);
@@ -58,7 +58,7 @@
 .settings-delete-button{
     background-color: transparent;
     color: var(--danger-color);
-    border: 1px solid var(--danger-color);
+    border: 1px solid transparent;
     padding: 5px 10px;
     border-radius: 8px;
     font-size: 1rem;
@@ -67,8 +67,7 @@
 }
 
 .settings-delete-button:hover{
-    background-color: var(--danger-color);
-    color: var(--background-primary);
+    border: 1px solid var(--danger-color);
 }
 
 .settings-label {

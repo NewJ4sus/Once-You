@@ -19,11 +19,6 @@
   padding: 1.5rem;
   background-color: var(--background-secondary);
   border-radius: 8px;
-  transition: transform 0.2s ease;
-}
-
-.feature-item:hover {
-  transform: translateY(-5px);
 }
 
 .feature-item h3 {

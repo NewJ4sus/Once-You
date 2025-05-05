@@ -63,8 +63,20 @@
     width: 100%;
     min-height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .no_note_content p{
+    color: var(--text-secondary);
+  }
+
+  .no_note_content svg{
+    color: var(--text-secondary);
+    width: 100px;
+    height: 100px;
+    opacity: 0.5;
   }
 
 

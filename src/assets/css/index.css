@@ -2,7 +2,7 @@
   font-family: sans-serif;
 }
 ::selection{
-  background-color: var(--background-tertiary) !important;
+  background-color: var(--accent-color) !important;
   color: var(--text-primary) !important;
 }
 

@@ -22,6 +22,7 @@ export default {
     saveTask: 'Сохранить',
     cancelTask: 'Отменить',
     noTask: 'Нет текущих задач',
+    noTaskCompleted: 'Нет выполненных задач',
     loading: 'Загрузка задач...',
   },
   header: {

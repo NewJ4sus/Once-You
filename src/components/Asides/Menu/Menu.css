@@ -5,7 +5,7 @@
   width: 300px;
   height: calc(100vh - 70px);
   background-color: var(--background-primary);
-  border-right: 2px solid var(--border-color);
+  /* border-right: 2px solid var(--border-color); */
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -13,6 +13,16 @@
   overflow-y: auto;
 
   z-index: 8888;
+}
+
+.sidebar-menu::after{
+  content: "";
+  position: absolute;
+  top: 2%;
+  height: 96%;
+  width: 2px;
+  background-color: var(--border-color);
+  right: 0;
 }
 
 .sidebar-menu-list {
