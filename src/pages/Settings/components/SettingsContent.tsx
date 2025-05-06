@@ -15,11 +15,11 @@ interface UserSettings {
   firstName: string;
   lastName: string;
   themeColor: 'light' | 'dark';
-  themeType: 'standard' | 'glass';
   background: 'solid' | 'noise' | 'gradient';
   language: string;
   hideNoteText: boolean;
-  notifications: boolean;
+  typeUser: 'default';
+  group: 'admin' | 'moderator' | 'user';
 }
 const SettingsContent: React.FC = () => {
   const { userSettings, updateSetting } = useUserSettings();
@@ -28,7 +28,10 @@ const SettingsContent: React.FC = () => {
   const [newNoteType, setNewNoteType] = useState('');
   const [deleting, setDeleting] = useState<string | null>(null);
 
-  const handleSettingChange = async (key: keyof UserSettings, value: UserSettings[keyof UserSettings]) => {
+  const handleSettingChange = async <K extends keyof UserSettings>(
+    key: K,
+    value: UserSettings[K]
+  ) => {
     await updateSetting(key, value);
   };
 
@@ -108,12 +111,6 @@ const SettingsContent: React.FC = () => {
                     </li>
                     <li className="dropdown-menu-item">
                       <a href="#" onClick={() => handleSettingChange('themeColor', 'light')}>{t('settings.light')}</a>
-                    </li>
-                    <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('themeColor', 'book')}>{t('settings.book')}</a>
-                    </li>
-                    <li className="dropdown-menu-item">
-                      <a href="#" onClick={() => handleSettingChange('themeColor', 'green')}>{t('settings.green')}</a>
                     </li>
                   </ul>
                 </Dropdown>

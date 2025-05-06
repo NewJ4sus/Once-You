@@ -101,6 +101,13 @@
   border-radius: 15px;
   transition: all 0.3s ease;
   position: relative;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.task-item:hover {
+  transform: scale(1.02);
 }
 
 /* Task type styles */
